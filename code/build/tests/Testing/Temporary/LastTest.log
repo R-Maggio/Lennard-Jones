@@ -1,0 +1,63 @@
+Start testing: Apr 23 11:13 CEST
+----------------------------------------------------------
+1/2 Testing: test_grid
+1/2 Test: test_grid
+Command: "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/test_grid"
+Directory: /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests
+"test_grid" start time: Apr 23 11:13 CEST
+Output:
+----------------------------------------------------------
+domainSize:100, gridSize:38, cellSize:2.63158
+ grid.getCells()[39].getLl():   {x:2.6316, y:2.6316}
+ grid.getCells()[39].getLocalParticles()[0]->getPosition():   {x:3, y:3}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:97.368, y:97.368}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:97.368, y:0}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:97.368, y:2.6316}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:0, y:97.368}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:0, y:0}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:0, y:2.6316}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:2.6316, y:97.368}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:2.6316, y:0}
+grid.findCells(Vector2D(1, 1), 2.5)[i] :  {x:2.6316, y:2.6316}
+ grid.getCells()[0].isPositionInCell(Vector2D(2, 1)):   1
+ grid.getCells()[0].isPositionInCell(Vector2D(1, -1)):   0
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_grid" end time: Apr 23 11:13 CEST
+"test_grid" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/2 Testing: test_particle
+2/2 Test: test_particle
+Command: "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/test_particle"
+Directory: /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests
+"test_particle" start time: Apr 23 11:13 CEST
+Output:
+----------------------------------------------------------
+[r:{x:1, y:-2}, v:{x:1, y:1}, a:{x:-1, y:2}, m:1]
+p1 = Particle(r*2, v*2, a*2, m*2);
+[r:{x:2, y:-4}, v:{x:2, y:2}, a:{x:-2, y:4}, m:2]
+auto p2 = p1.copy();
+[r:{x:2, y:-4}, v:{x:2, y:2}, a:{x:-2, y:4}, m:2]
+p1.getPosition(), p1.getVelocity(), p1.getAcceleration(), p1.getMass()
+{x:2, y:-4}{x:2, y:2}{x:-2, y:4}2
+p2.setAcceleration(a); p2.setPosition(r); p2.setVelocity(v); p2.setMass(m);
+p2:[r:{x:1, y:-2}, v:{x:1, y:1}, a:{x:-1, y:2}, m:1]
+p1, p2:[r:{x:2, y:-4}, v:{x:2, y:2}, a:{x:-2, y:4}, m:2], [r:{x:1, y:-2}, v:{x:1, y:1}, a:{x:-1, y:2}, m:1]
+Particle::dist(p1, p2)
+2.2361
+Particle::squaredDist(p1, p2)
+5
+p1.computeKineticEnergy()
+8
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test_particle" end time: Apr 23 11:13 CEST
+"test_particle" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 23 11:13 CEST
