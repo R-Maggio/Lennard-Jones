@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/lennard_jones.dir/src/Particle.cpp.o"
   "CMakeFiles/lennard_jones.dir/src/Cell.cpp.o"
   "CMakeFiles/lennard_jones.dir/src/Grid.cpp.o"
+  "CMakeFiles/lennard_jones.dir/src/LJSimulation.cpp.o"
   "lennard_jones.pdb"
   "lennard_jones"
 )

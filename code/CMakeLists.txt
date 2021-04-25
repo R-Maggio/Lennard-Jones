@@ -16,7 +16,7 @@ add_subdirectory(tests)
 include_directories(./include ./src)
 
 # target
-add_executable(lennard_jones ./src/main.cpp ./src/Vector2D.cpp ./src/Particle.cpp ./src/Cell.cpp ./src/Grid.cpp)
+add_executable(lennard_jones ./src/main.cpp ./src/Vector2D.cpp ./src/Particle.cpp ./src/Cell.cpp ./src/Grid.cpp ./src/LJSimulation.cpp)
 # add_executable( binary ./src/main.cpp ./src/game_engine.cpp ./src/game_interface.cpp )
 
 # # external libs

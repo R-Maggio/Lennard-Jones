@@ -61,6 +61,16 @@ Vector2D& Vector2D::operator*=(real_t scalar) {
     return *this; 
 }
 
+// return the true modulo operation
+
+Vector2D operator%(const Vector2D& vector, real_t scalar) {
+    const real_t x = std::fmod(vector.x, scalar);
+    const real_t y = std::fmod(vector.y, scalar);
+    x >= 0 ? x : x + scalar;
+    y >= 0 ? y : y + scalar;
+    return Vector2D(x, y);
+}
+
 // return the euclidean norm of a vector (static function)
 
 real_t Vector2D::norm() const {

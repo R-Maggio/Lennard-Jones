@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory> // std::unique_ptr
+#include <string>
 
 #include "typeDefinitions.hpp"
 #include "Vector2D.hpp"
@@ -27,6 +28,8 @@ private:
     real_t simulationDuration;
     // number of steps:
     unsigned int nbSteps;
+    // time step = nbSteps/simulationDuration:
+    real_t dt;
     // sigma:
     real_t sigma;
     // mass of a particle:
@@ -68,7 +71,7 @@ private:
 public:
 
     LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize);
-
+    //TODO: domainSize and gridSize should be vectors
     //TODO: add getters and setters
 
     // functions:
@@ -93,9 +96,39 @@ public:
      */
     void computeAccelerations();
 
+
+    /**
+     * @brief compute the next step of the simulation and update the velocities using the leap frog algorithm
+     * 
+     */
+    void computeStep();
+
+    /**
+     * @brief compute the next step of the simulation and update the velocities using the leap frog algorithm
+     * 
+     * @param dt 
+     */
+    void computeStep(real_t dt);
+
     /**
      * @brief start the simulation
      * 
+     * @param simulationDuration 
+     * @param nbSteps 
      */
-    // void start();
+    void start(real_t simulationDuration, unsigned int nbSteps);
+
+    /**
+     * @brief export the particles to an csv file
+     * 
+     * @param path 
+     */
+    void exportParticlesCSV(std::string path);
+
+    /**
+     * @brief place randomly n particles inside the grid
+     * 
+     * @param nbParticles 
+     */
+    void placeRandomParticles(unsigned int nbParticles);
 };

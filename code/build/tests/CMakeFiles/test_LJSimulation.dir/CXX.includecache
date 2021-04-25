@@ -6,29 +6,29 @@
 
 #IncludeRegexTransform: 
 
-.././include/Cell.hpp
+../tests/../include/Cell.hpp
 vector
 -
 iterator
 -
 Vector2D.hpp
-.././include/Vector2D.hpp
+../tests/../include/Vector2D.hpp
 Particle.hpp
-.././include/Particle.hpp
+../tests/../include/Particle.hpp
 Grid.hpp
-.././include/Grid.hpp
+../tests/../include/Grid.hpp
 
-.././include/Grid.hpp
+../tests/../include/Grid.hpp
 vector
 -
 Vector2D.hpp
-.././include/Vector2D.hpp
+../tests/../include/Vector2D.hpp
 Particle.hpp
-.././include/Particle.hpp
+../tests/../include/Particle.hpp
 Cell.hpp
-.././include/Cell.hpp
+../tests/../include/Cell.hpp
 
-.././include/LJSimulation.hpp
+../tests/../include/LJSimulation.hpp
 vector
 -
 memory
@@ -36,31 +36,31 @@ memory
 string
 -
 typeDefinitions.hpp
-.././include/typeDefinitions.hpp
+../tests/../include/typeDefinitions.hpp
 Vector2D.hpp
-.././include/Vector2D.hpp
+../tests/../include/Vector2D.hpp
 Particle.hpp
-.././include/Particle.hpp
+../tests/../include/Particle.hpp
 Cell.hpp
-.././include/Cell.hpp
+../tests/../include/Cell.hpp
 Grid.hpp
-.././include/Grid.hpp
+../tests/../include/Grid.hpp
 
-.././include/Particle.hpp
+../tests/../include/Particle.hpp
 typeDefinitions.hpp
-.././include/typeDefinitions.hpp
+../tests/../include/typeDefinitions.hpp
 Vector2D.hpp
-.././include/Vector2D.hpp
+../tests/../include/Vector2D.hpp
 
-.././include/Vector2D.hpp
+../tests/../include/Vector2D.hpp
 iostream
 -
 typeDefinitions.hpp
-.././include/typeDefinitions.hpp
+../tests/../include/typeDefinitions.hpp
 
-.././include/constExpr.hpp
+../tests/../include/constExpr.hpp
 
-.././include/typeDefinitions.hpp
+../tests/../include/typeDefinitions.hpp
 
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/include/Cell.hpp
 vector
@@ -164,11 +164,17 @@ iomanip
 Vector2D.hpp
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Vector2D.hpp
 
-/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/main.cpp
+/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/LJSimulation_TEST.cpp
 iostream
 -
 string
 -
+../include/Vector2D.hpp
+/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/include/Vector2D.hpp
+../include/Particle.hpp
+/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/include/Particle.hpp
+../include/Grid.hpp
+/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/include/Grid.hpp
 ../include/LJSimulation.hpp
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/include/LJSimulation.hpp
 

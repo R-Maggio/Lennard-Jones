@@ -25,6 +25,11 @@
   "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Grid.cpp"
 },
 {
+  "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build",
+  "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/./include -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/./src  -g   -o CMakeFiles/lennard_jones.dir/src/LJSimulation.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/LJSimulation.cpp",
+  "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/LJSimulation.cpp"
+},
+{
   "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",
   "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/../include  -g   -o CMakeFiles/test_grid.dir/Grid_TEST.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/Grid_TEST.cpp",
   "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/Grid_TEST.cpp"
@@ -48,6 +53,36 @@
   "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",
   "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/../include  -g   -o CMakeFiles/test_grid.dir/__/src/Grid.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Grid.cpp",
   "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Grid.cpp"
+},
+{
+  "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",
+  "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/../include  -g   -o CMakeFiles/test_LJSimulation.dir/LJSimulation_TEST.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/LJSimulation_TEST.cpp",
+  "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/LJSimulation_TEST.cpp"
+},
+{
+  "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",
+  "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/../include  -g   -o CMakeFiles/test_LJSimulation.dir/__/src/Vector2D.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Vector2D.cpp",
+  "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Vector2D.cpp"
+},
+{
+  "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",
+  "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/../include  -g   -o CMakeFiles/test_LJSimulation.dir/__/src/Particle.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Particle.cpp",
+  "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Particle.cpp"
+},
+{
+  "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",
+  "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/../include  -g   -o CMakeFiles/test_LJSimulation.dir/__/src/Cell.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Cell.cpp",
+  "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Cell.cpp"
+},
+{
+  "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",
+  "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/../include  -g   -o CMakeFiles/test_LJSimulation.dir/__/src/Grid.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Grid.cpp",
+  "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/Grid.cpp"
+},
+{
+  "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",
+  "command": "/usr/bin/g++-7   -I/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/tests/../include  -g   -o CMakeFiles/test_LJSimulation.dir/__/src/LJSimulation.cpp.o -c /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/LJSimulation.cpp",
+  "file": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/src/LJSimulation.cpp"
 },
 {
   "directory": "/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests",

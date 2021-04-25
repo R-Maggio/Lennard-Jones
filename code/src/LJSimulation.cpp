@@ -1,10 +1,15 @@
 
 #include <cmath> //std::sqrt, std::pow
 #include <memory> // std::unique_ptr
+#include <fstream> // write to file
+#include <iostream>
+#include <string>
+#include <ctime> // srand, rand
 #include "LJSimulation.hpp"
+#include "Cell.hpp"
 #include "constExpr.hpp"
 
-LJSimulation::LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize) {
+LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize) {
     this->sigma = sigma;
     this->mass = mass;
     this->eps = eps;
@@ -26,9 +31,9 @@ LJSimulation::LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, 
     // allocate memory for the grid:
     this->grid = std::make_unique<Grid>(this->domainSize_r, gridSize); // WARNING: we are using reduced units for the size of the domain.
 
-    //TODO: call an init function for the particles
+    //TODO: call an init function for the particles (random for example)
     // places all the particles in the grid:
-    placeAllParticles();
+    placeAllParticles(); //! might be called in another place
 }
 
 void LJSimulation::placeAllParticles() {
@@ -38,7 +43,7 @@ void LJSimulation::placeAllParticles() {
     }
 }
 
-real_t LJSimulation::LJSimulation::ComputeTemperature() {
+real_t LJSimulation::ComputeTemperature() {
     real_t E = 0; // kinetic energy
     for (auto &p : particles)
     {
@@ -51,13 +56,14 @@ real_t LJSimulation::LJSimulation::ComputeTemperature() {
     return 2*eps*E/(3*Kb);
 }
 
-real_t LJSimulation::LJSimulation::ComputePressure() {
+real_t LJSimulation::ComputePressure() {
     // PV = nRT => P = nRT/V
     return particles.size()*R_*ComputeTemperature()/(domainSize*domainSize);
 }
 
-void LJSimulation::LJSimulation::computeAccelerations() {
-    //TODO: make 2 different fct: 1 if all particles are the same, another if not.
+void LJSimulation::computeAccelerations() {
+    // TODO: make 2 different fct: 1 if all particles are the same, another if not.
+    // TODO: rewrite the function with the non-reduced form
     // we need to iterate over the cells:
     for (auto &cell : grid->getCells())
     {
@@ -106,6 +112,87 @@ void LJSimulation::LJSimulation::computeAccelerations() {
     
 }
 
-// void LJSimulation::LJSimulation::start() {
-//  
-// }
+void LJSimulation::computeStep(real_t dt) {
+    
+    /* the leap frog algorithm:
+    * x(t+dt) = x(t) + dt * v(t + 1/2 dt)
+    * v(t + 3/2 dt) = v(t + 1/2 dt) + dt * a(t + dt)
+    */
+
+    for (auto &p : particles)
+    {
+        // update the position
+        p.setPosition((p.getPosition() + dt * p.getVelocity()) % this->domainSize_r);
+        p.setAcceleration(Vector2D(0., 0.)); // reset the acceleration
+    }
+
+    // compute the new acceleration:
+    computeAccelerations();
+
+    // update the velocities
+    for (auto &p : particles)
+    {
+        p.setVelocity(p.getVelocity() + dt * p.getAcceleration());
+    }
+    // replace the particles. We need to iterate over the cells:
+    //! very unefficient !!!
+    for (auto &cell : grid->getCells())
+    {
+        cell.setLocalParticles(std::vector<Particle *>()); // reset the cells
+    }
+    this->placeAllParticles(); // replace the particles
+}
+
+void LJSimulation::computeStep() {
+    computeStep(this->dt);
+}
+
+void LJSimulation::start(real_t simulationDuration, unsigned int nbSteps) {
+    // set the parameters for the simulation
+    this->simulationDuration = simulationDuration;
+    this->simulationDuration_r = simulationDuration / sigma;
+    this->nbSteps = nbSteps;
+    this->dt = this->simulationDuration_r / this->nbSteps;
+    // compute the simulation
+    for (int i = 0; i < nbSteps; i++)
+    {
+        computeStep();
+    }
+}
+
+void LJSimulation::exportParticlesCSV(std::string path) {
+    // open the file or create it
+    std::ofstream file;
+    file.open(path);
+    if (file.is_open()) {
+        // csv header:
+        file << "px,py,vx,vy,ax,ay\n";
+        for (auto &p : particles)
+        {
+            file << p.getPosition().x << ',' << p.getPosition().y << ','
+                 << p.getVelocity().x << ',' << p.getVelocity().y << ','
+                 << p.getAcceleration().x << ',' << p.getAcceleration().y << '\n';
+        }
+        
+    } else {
+        std::cerr << "Error: cannot open the file: " << path << '\n';
+    }
+    
+    // close the file:
+    file.close();
+}
+
+void LJSimulation::placeRandomParticles(unsigned int nbParticles) {
+    std::srand(12345);
+
+    for (int i = 0; i < nbParticles; i++)
+    {
+        real_t random_px = ((real_t) std::rand()) / (real_t) RAND_MAX * this->domainSize_r;
+        real_t random_py = ((real_t) std::rand()) / (real_t) RAND_MAX * this->domainSize_r;
+        real_t random_vx = ((real_t) std::rand()) / (real_t) RAND_MAX * 1;
+        real_t random_vy = ((real_t) std::rand()) / (real_t) RAND_MAX * 1;
+        particles.push_back(Particle(Vector2D(random_px, random_py), Vector2D(random_vx, random_vy), Vector2D()));
+    }
+    // put the particles inside the Grid:
+    placeAllParticles();
+}

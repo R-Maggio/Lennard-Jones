@@ -170,6 +170,19 @@ test_grid/fast:
 .PHONY : test_grid/fast
 
 #=============================================================================
+# Target rules for targets named test_LJSimulation
+
+# Build rule for target.
+test_LJSimulation: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_LJSimulation
+.PHONY : test_LJSimulation
+
+# fast build rule for target.
+test_LJSimulation/fast:
+	$(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/build
+.PHONY : test_LJSimulation/fast
+
+#=============================================================================
 # Target rules for targets named test_particle
 
 # Build rule for target.
@@ -235,6 +248,33 @@ src/Grid.s: src/Grid.cpp.s
 src/Grid.cpp.s:
 	$(MAKE) -f CMakeFiles/lennard_jones.dir/build.make CMakeFiles/lennard_jones.dir/src/Grid.cpp.s
 .PHONY : src/Grid.cpp.s
+
+src/LJSimulation.o: src/LJSimulation.cpp.o
+
+.PHONY : src/LJSimulation.o
+
+# target to build an object file
+src/LJSimulation.cpp.o:
+	$(MAKE) -f CMakeFiles/lennard_jones.dir/build.make CMakeFiles/lennard_jones.dir/src/LJSimulation.cpp.o
+.PHONY : src/LJSimulation.cpp.o
+
+src/LJSimulation.i: src/LJSimulation.cpp.i
+
+.PHONY : src/LJSimulation.i
+
+# target to preprocess a source file
+src/LJSimulation.cpp.i:
+	$(MAKE) -f CMakeFiles/lennard_jones.dir/build.make CMakeFiles/lennard_jones.dir/src/LJSimulation.cpp.i
+.PHONY : src/LJSimulation.cpp.i
+
+src/LJSimulation.s: src/LJSimulation.cpp.s
+
+.PHONY : src/LJSimulation.s
+
+# target to generate assembly for a file
+src/LJSimulation.cpp.s:
+	$(MAKE) -f CMakeFiles/lennard_jones.dir/build.make CMakeFiles/lennard_jones.dir/src/LJSimulation.cpp.s
+.PHONY : src/LJSimulation.cpp.s
 
 src/Particle.o: src/Particle.cpp.o
 
@@ -330,6 +370,7 @@ help:
 	@echo "... package_source"
 	@echo "... package"
 	@echo "... test_grid"
+	@echo "... test_LJSimulation"
 	@echo "... test_particle"
 	@echo "... src/Cell.o"
 	@echo "... src/Cell.i"
@@ -337,6 +378,9 @@ help:
 	@echo "... src/Grid.o"
 	@echo "... src/Grid.i"
 	@echo "... src/Grid.s"
+	@echo "... src/LJSimulation.o"
+	@echo "... src/LJSimulation.i"
+	@echo "... src/LJSimulation.s"
 	@echo "... src/Particle.o"
 	@echo "... src/Particle.i"
 	@echo "... src/Particle.s"

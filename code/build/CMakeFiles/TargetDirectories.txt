@@ -5,9 +5,10 @@
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/CMakeFiles/package_source.dir
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/CMakeFiles/package.dir
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/edit_cache.dir
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/test_grid.dir
+/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/test_LJSimulation.dir
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/package.dir
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/package_source.dir
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/test_particle.dir
 /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/test.dir
-/mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build/tests/CMakeFiles/edit_cache.dir

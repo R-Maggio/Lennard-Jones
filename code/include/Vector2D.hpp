@@ -97,6 +97,15 @@ public:
     Vector2D& operator*=(real_t scalar);
 
     /**
+     * @brief apply the true modulo operation on each element
+     * 
+     * @param vector 
+     * @param scalar 
+     * @return Vector2D 
+     */
+    friend Vector2D operator%(const Vector2D& vector, real_t scalar);
+
+    /**
      * @brief return the euclidean norm of a vector (static function)
      * 
      * @return real_t 

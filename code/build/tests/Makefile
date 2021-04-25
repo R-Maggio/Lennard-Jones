@@ -67,6 +67,17 @@ rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
+
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool..."
@@ -99,17 +110,6 @@ test:
 test/fast: test
 
 .PHONY : test/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -159,6 +159,21 @@ test_grid/fast:
 .PHONY : test_grid/fast
 
 # Convenience name for target.
+tests/CMakeFiles/test_LJSimulation.dir/rule:
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_LJSimulation.dir/rule
+.PHONY : tests/CMakeFiles/test_LJSimulation.dir/rule
+
+# Convenience name for target.
+test_LJSimulation: tests/CMakeFiles/test_LJSimulation.dir/rule
+
+.PHONY : test_LJSimulation
+
+# fast build rule for target.
+test_LJSimulation/fast:
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/build
+.PHONY : test_LJSimulation/fast
+
+# Convenience name for target.
 tests/CMakeFiles/test_particle.dir/rule:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_particle.dir/rule
 .PHONY : tests/CMakeFiles/test_particle.dir/rule
@@ -200,6 +215,33 @@ Grid_TEST.cpp.s:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/Grid_TEST.cpp.s
 .PHONY : Grid_TEST.cpp.s
 
+LJSimulation_TEST.o: LJSimulation_TEST.cpp.o
+
+.PHONY : LJSimulation_TEST.o
+
+# target to build an object file
+LJSimulation_TEST.cpp.o:
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/LJSimulation_TEST.cpp.o
+.PHONY : LJSimulation_TEST.cpp.o
+
+LJSimulation_TEST.i: LJSimulation_TEST.cpp.i
+
+.PHONY : LJSimulation_TEST.i
+
+# target to preprocess a source file
+LJSimulation_TEST.cpp.i:
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/LJSimulation_TEST.cpp.i
+.PHONY : LJSimulation_TEST.cpp.i
+
+LJSimulation_TEST.s: LJSimulation_TEST.cpp.s
+
+.PHONY : LJSimulation_TEST.s
+
+# target to generate assembly for a file
+LJSimulation_TEST.cpp.s:
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/LJSimulation_TEST.cpp.s
+.PHONY : LJSimulation_TEST.cpp.s
+
 Particle_TEST.o: Particle_TEST.cpp.o
 
 .PHONY : Particle_TEST.o
@@ -234,6 +276,7 @@ __/src/Cell.o: __/src/Cell.cpp.o
 # target to build an object file
 __/src/Cell.cpp.o:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Cell.cpp.o
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Cell.cpp.o
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Cell.cpp.o
 .PHONY : __/src/Cell.cpp.o
 
@@ -244,6 +287,7 @@ __/src/Cell.i: __/src/Cell.cpp.i
 # target to preprocess a source file
 __/src/Cell.cpp.i:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Cell.cpp.i
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Cell.cpp.i
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Cell.cpp.i
 .PHONY : __/src/Cell.cpp.i
 
@@ -254,6 +298,7 @@ __/src/Cell.s: __/src/Cell.cpp.s
 # target to generate assembly for a file
 __/src/Cell.cpp.s:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Cell.cpp.s
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Cell.cpp.s
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Cell.cpp.s
 .PHONY : __/src/Cell.cpp.s
 
@@ -264,6 +309,7 @@ __/src/Grid.o: __/src/Grid.cpp.o
 # target to build an object file
 __/src/Grid.cpp.o:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Grid.cpp.o
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Grid.cpp.o
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Grid.cpp.o
 .PHONY : __/src/Grid.cpp.o
 
@@ -274,6 +320,7 @@ __/src/Grid.i: __/src/Grid.cpp.i
 # target to preprocess a source file
 __/src/Grid.cpp.i:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Grid.cpp.i
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Grid.cpp.i
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Grid.cpp.i
 .PHONY : __/src/Grid.cpp.i
 
@@ -284,8 +331,36 @@ __/src/Grid.s: __/src/Grid.cpp.s
 # target to generate assembly for a file
 __/src/Grid.cpp.s:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Grid.cpp.s
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Grid.cpp.s
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Grid.cpp.s
 .PHONY : __/src/Grid.cpp.s
+
+__/src/LJSimulation.o: __/src/LJSimulation.cpp.o
+
+.PHONY : __/src/LJSimulation.o
+
+# target to build an object file
+__/src/LJSimulation.cpp.o:
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/LJSimulation.cpp.o
+.PHONY : __/src/LJSimulation.cpp.o
+
+__/src/LJSimulation.i: __/src/LJSimulation.cpp.i
+
+.PHONY : __/src/LJSimulation.i
+
+# target to preprocess a source file
+__/src/LJSimulation.cpp.i:
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/LJSimulation.cpp.i
+.PHONY : __/src/LJSimulation.cpp.i
+
+__/src/LJSimulation.s: __/src/LJSimulation.cpp.s
+
+.PHONY : __/src/LJSimulation.s
+
+# target to generate assembly for a file
+__/src/LJSimulation.cpp.s:
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/LJSimulation.cpp.s
+.PHONY : __/src/LJSimulation.cpp.s
 
 __/src/Particle.o: __/src/Particle.cpp.o
 
@@ -294,6 +369,7 @@ __/src/Particle.o: __/src/Particle.cpp.o
 # target to build an object file
 __/src/Particle.cpp.o:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Particle.cpp.o
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Particle.cpp.o
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Particle.cpp.o
 .PHONY : __/src/Particle.cpp.o
 
@@ -304,6 +380,7 @@ __/src/Particle.i: __/src/Particle.cpp.i
 # target to preprocess a source file
 __/src/Particle.cpp.i:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Particle.cpp.i
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Particle.cpp.i
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Particle.cpp.i
 .PHONY : __/src/Particle.cpp.i
 
@@ -314,6 +391,7 @@ __/src/Particle.s: __/src/Particle.cpp.s
 # target to generate assembly for a file
 __/src/Particle.cpp.s:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Particle.cpp.s
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Particle.cpp.s
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Particle.cpp.s
 .PHONY : __/src/Particle.cpp.s
 
@@ -324,6 +402,7 @@ __/src/Vector2D.o: __/src/Vector2D.cpp.o
 # target to build an object file
 __/src/Vector2D.cpp.o:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Vector2D.cpp.o
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Vector2D.cpp.o
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Vector2D.cpp.o
 .PHONY : __/src/Vector2D.cpp.o
 
@@ -334,6 +413,7 @@ __/src/Vector2D.i: __/src/Vector2D.cpp.i
 # target to preprocess a source file
 __/src/Vector2D.cpp.i:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Vector2D.cpp.i
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Vector2D.cpp.i
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Vector2D.cpp.i
 .PHONY : __/src/Vector2D.cpp.i
 
@@ -344,6 +424,7 @@ __/src/Vector2D.s: __/src/Vector2D.cpp.s
 # target to generate assembly for a file
 __/src/Vector2D.cpp.s:
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_grid.dir/build.make tests/CMakeFiles/test_grid.dir/__/src/Vector2D.cpp.s
+	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_LJSimulation.dir/build.make tests/CMakeFiles/test_LJSimulation.dir/__/src/Vector2D.cpp.s
 	cd /mnt/c/Users/cubed/switchdrive/2ndYearComputerScience/Bachelor/Lennard-Jones/code/build && $(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/__/src/Vector2D.cpp.s
 .PHONY : __/src/Vector2D.cpp.s
 
@@ -354,15 +435,19 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... edit_cache"
 	@echo "... test_grid"
+	@echo "... test_LJSimulation"
 	@echo "... package"
 	@echo "... package_source"
 	@echo "... test_particle"
 	@echo "... test"
-	@echo "... edit_cache"
 	@echo "... Grid_TEST.o"
 	@echo "... Grid_TEST.i"
 	@echo "... Grid_TEST.s"
+	@echo "... LJSimulation_TEST.o"
+	@echo "... LJSimulation_TEST.i"
+	@echo "... LJSimulation_TEST.s"
 	@echo "... Particle_TEST.o"
 	@echo "... Particle_TEST.i"
 	@echo "... Particle_TEST.s"
@@ -372,6 +457,9 @@ help:
 	@echo "... __/src/Grid.o"
 	@echo "... __/src/Grid.i"
 	@echo "... __/src/Grid.s"
+	@echo "... __/src/LJSimulation.o"
+	@echo "... __/src/LJSimulation.i"
+	@echo "... __/src/LJSimulation.s"
 	@echo "... __/src/Particle.o"
 	@echo "... __/src/Particle.i"
 	@echo "... __/src/Particle.s"
