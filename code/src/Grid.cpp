@@ -44,11 +44,11 @@ void Grid::initGrid() {
 }
 
 void Grid::placeParticle(Particle* particle) {
-    auto position = particle->getPosition();
+    auto position = particle->getPosition() % (gridSize * cellSize);
     // we need to find the cell according to the position of the particle
     // i is the index of the x-axis and j the index of the y-axis
     // we have that: i = int(px/cellSize), j = int(px/cellSize)
-    unsigned int i = ((int) (position.x / cellSize) % gridSize);
+    unsigned int i = ((int) (position.x / cellSize) % gridSize); // % gridSize to avoid the case where position.x == gridsize*cellSize.... => index out of range
     unsigned int j = ((int) (position.y / cellSize) % gridSize);
     // add the particle tho the corresponding cell:
     cells[j*gridSize + i].addParticle(particle);

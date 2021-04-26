@@ -61,13 +61,26 @@ Vector2D& Vector2D::operator*=(real_t scalar) {
     return *this; 
 }
 
+// division
+Vector2D operator/(const Vector2D& vector, real_t scalar) {
+    return Vector2D(vector.x / scalar, vector.y / scalar);
+}
+
+Vector2D operator/(real_t scalar, const Vector2D& vector) {
+    return Vector2D(scalar / vector.x, scalar / vector.y);
+}
+
+Vector2D& Vector2D::operator/=(real_t scalar) {
+    this->x /= scalar;
+    this->y /= scalar;
+    return *this; 
+}
+
 // return the true modulo operation
 
 Vector2D operator%(const Vector2D& vector, real_t scalar) {
-    const real_t x = std::fmod(vector.x, scalar);
-    const real_t y = std::fmod(vector.y, scalar);
-    x >= 0 ? x : x + scalar;
-    y >= 0 ? y : y + scalar;
+    const real_t x = std::fmod(std::fmod(vector.x, scalar) + scalar, scalar);
+    const real_t y = std::fmod(std::fmod(vector.y, scalar) + scalar, scalar);
     return Vector2D(x, y);
 }
 

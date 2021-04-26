@@ -13,6 +13,12 @@ set_target_properties(test_particle PROPERTIES LINKER_LANGUAGE CXX)
 
 add_test(NAME test_particle COMMAND test_particle)
 
+add_executable(test_Vector2D Vector2D_TEST.cpp ../src/Vector2D.cpp ../src/Particle.cpp ../src/Cell.cpp ../src/Grid.cpp ../src/Vector2D.cpp)
+target_include_directories(test_Vector2D PRIVATE ../include)
+set_target_properties(test_Vector2D PROPERTIES LINKER_LANGUAGE CXX)
+
+add_test(NAME test_Vector2D COMMAND test_Vector2D)
+
 add_executable(test_LJSimulation LJSimulation_TEST.cpp ../src/Vector2D.cpp ../src/Particle.cpp ../src/Cell.cpp ../src/Grid.cpp ../src/LJSimulation.cpp)
 target_include_directories(test_LJSimulation PRIVATE ../include)
 set_target_properties(test_LJSimulation PROPERTIES LINKER_LANGUAGE CXX)

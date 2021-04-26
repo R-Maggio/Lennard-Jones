@@ -182,6 +182,23 @@ void LJSimulation::exportParticlesCSV(std::string path) {
     file.close();
 }
 
+void LJSimulation::exportConfigJSON(std::string path) {
+    // open the file or create it
+    std::ofstream file;
+    file.open(path);
+    if (file.is_open()) {
+        // csv header:
+        file << "{\n"
+             << "\"domainSize\": " << this->domainSize_r
+             << "\n}";
+    } else {
+        std::cerr << "Error: cannot open the file: " << path << '\n';
+    }
+    
+    // close the file:
+    file.close();
+}
+
 void LJSimulation::placeRandomParticles(unsigned int nbParticles) {
     std::srand(12345);
 
@@ -189,8 +206,8 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles) {
     {
         real_t random_px = ((real_t) std::rand()) / (real_t) RAND_MAX * this->domainSize_r;
         real_t random_py = ((real_t) std::rand()) / (real_t) RAND_MAX * this->domainSize_r;
-        real_t random_vx = ((real_t) std::rand()) / (real_t) RAND_MAX * 1;
-        real_t random_vy = ((real_t) std::rand()) / (real_t) RAND_MAX * 1;
+        real_t random_vx = ((real_t) std::rand()) / (real_t) RAND_MAX * 100;
+        real_t random_vy = ((real_t) std::rand()) / (real_t) RAND_MAX * 100;
         particles.push_back(Particle(Vector2D(random_px, random_py), Vector2D(random_vx, random_vy), Vector2D()));
     }
     // put the particles inside the Grid:

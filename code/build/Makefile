@@ -157,6 +157,19 @@ lennard_jones/fast:
 .PHONY : lennard_jones/fast
 
 #=============================================================================
+# Target rules for targets named test_particle
+
+# Build rule for target.
+test_particle: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_particle
+.PHONY : test_particle
+
+# fast build rule for target.
+test_particle/fast:
+	$(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/build
+.PHONY : test_particle/fast
+
+#=============================================================================
 # Target rules for targets named test_grid
 
 # Build rule for target.
@@ -183,17 +196,17 @@ test_LJSimulation/fast:
 .PHONY : test_LJSimulation/fast
 
 #=============================================================================
-# Target rules for targets named test_particle
+# Target rules for targets named test_Vector2D
 
 # Build rule for target.
-test_particle: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test_particle
-.PHONY : test_particle
+test_Vector2D: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_Vector2D
+.PHONY : test_Vector2D
 
 # fast build rule for target.
-test_particle/fast:
-	$(MAKE) -f tests/CMakeFiles/test_particle.dir/build.make tests/CMakeFiles/test_particle.dir/build
-.PHONY : test_particle/fast
+test_Vector2D/fast:
+	$(MAKE) -f tests/CMakeFiles/test_Vector2D.dir/build.make tests/CMakeFiles/test_Vector2D.dir/build
+.PHONY : test_Vector2D/fast
 
 src/Cell.o: src/Cell.cpp.o
 
@@ -369,9 +382,10 @@ help:
 	@echo "... lennard_jones"
 	@echo "... package_source"
 	@echo "... package"
+	@echo "... test_particle"
 	@echo "... test_grid"
 	@echo "... test_LJSimulation"
-	@echo "... test_particle"
+	@echo "... test_Vector2D"
 	@echo "... src/Cell.o"
 	@echo "... src/Cell.i"
 	@echo "... src/Cell.s"

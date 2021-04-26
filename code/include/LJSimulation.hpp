@@ -126,6 +126,13 @@ public:
     void exportParticlesCSV(std::string path);
 
     /**
+     * @brief export the configuration
+     * 
+     * @param path
+     */
+    void exportConfigJSON(std::string path);
+
+    /**
      * @brief place randomly n particles inside the grid
      * 
      * @param nbParticles 

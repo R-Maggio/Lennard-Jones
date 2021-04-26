@@ -97,6 +97,32 @@ public:
     Vector2D& operator*=(real_t scalar);
 
     /**
+     * @brief return result of dividing a vector by a scalar
+     * 
+     * @param vector 
+     * @param scalar 
+     * @return Vector2D 
+     */
+    friend Vector2D operator/(const Vector2D& vector, real_t scalar);
+
+    /**
+     * @brief return result of dividing a scalar by a vecor
+     * 
+     * @param vector 
+     * @param scalar 
+     * @return Vector2D 
+     */
+    friend Vector2D operator/(real_t scalar, const Vector2D& vector);
+
+    /**
+     * @brief /= operator overlading. divide by scalar
+     * 
+     * @param scalar
+     * @return Vector2D& 
+     */
+    Vector2D& operator/=(real_t scalar);
+
+    /**
      * @brief apply the true modulo operation on each element
      * 
      * @param vector 

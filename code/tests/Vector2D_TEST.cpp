@@ -52,6 +52,9 @@ int main(int argc, char const *argv[])
     std::cout << "vector *= 0.5" << '\n';
     std::cout << vector << '\n';
 
+    std::cout << "Vector2D(-12.7, 1500.9) % 10.5" << '\n';
+    std::cout << Vector2D(-12.7, 1500.9) % 10.5 << '\n';
+
     std::cout << "vector.norm()" << '\n';
     std::cout << vector.norm() << '\n';
 
