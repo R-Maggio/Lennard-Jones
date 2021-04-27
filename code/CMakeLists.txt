@@ -4,6 +4,14 @@ cmake_minimum_required(VERSION 3.0.0)
 # project name
 project(lennard_jones VERSION 0.1.0)
 
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# set(CMAKE_CXX_FLAGS "-O3 -Werror -Wall -Wextra -Wpedantic")
+# set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS "-O3 -Wall")
+
 # include(CTest)
 enable_testing()
 add_subdirectory(tests)
@@ -29,6 +37,7 @@ add_executable(lennard_jones ./src/main.cpp ./src/Vector2D.cpp ./src/Particle.cp
 # # add_library(randomize STATIC IMPORTED)
 # set_property(TARGET randomize PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/libs/Randomize/librandomize.a)
 # target_link_libraries( binary randomize )
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

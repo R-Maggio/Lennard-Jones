@@ -67,6 +67,12 @@ int main(int argc, char const *argv[])
     std::cout << "vector.squaredNorm()" << '\n';
     std::cout << vector.squaredNorm() << '\n';
 
+    std::cout <<  "Vector2D(2, 3).PeriodicDiff(Vector2D(8, 9), Vector2D(10., 10.))" << '\n';
+    std::cout <<  Vector2D(2, 3).PeriodicDiff(Vector2D(8, 9), Vector2D(10., 10.)) << '\n';
+
+    std::cout <<  "Vector2D(8, 9).PeriodicDiff(Vector2D(2, 3), Vector2D(10., 10.))" << '\n';
+    std::cout <<  Vector2D(8, 9).PeriodicDiff(Vector2D(2, 3), Vector2D(10., 10.)) << '\n';
+
     std::cout << "Vector2D::dist(Vector2D(1, 2), Vector2D(5, 4))" << '\n';
     std::cout << Vector2D::dist(Vector2D(1, 2), Vector2D(5, 4)) << '\n';
 

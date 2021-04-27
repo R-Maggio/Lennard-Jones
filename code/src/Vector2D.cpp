@@ -120,6 +120,20 @@ real_t Vector2D::squaredDist(const Vector2D& a, const Vector2D& b) {
     return Vector2D::squaredNorm(a - b);
 }
 
+Vector2D Vector2D::PeriodicDiff(const Vector2D& otherVector, const Vector2D& domainSize) const {
+    // we compute the "true" difference with periodic boundaries
+    auto diff = *this - otherVector;
+    if (diff.x > domainSize.x/2)
+        diff.x = domainSize.x - diff.x;
+    else if (diff.x < -domainSize.x/2)
+        diff.x = domainSize.x + diff.x;
+    if (diff.y > domainSize.y/2)
+        diff.y = domainSize.y - diff.y;
+    else if (diff.y < -domainSize.y/2)
+        diff.y = domainSize.y + diff.y;
+    return diff;
+}
+
 // overload cout to print a vector
 
 std::ostream& operator<<(std::ostream& os, const Vector2D& vector) {

@@ -26,10 +26,8 @@ LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, rea
      * time_r = time*sqrt(eps/(m*sigma^2))
      * 
     */
-    this->dc_r = dc/sigma;
-    this->domainSize_r = domainSize/sigma;
     // allocate memory for the grid:
-    this->grid = std::make_unique<Grid>(this->domainSize_r, gridSize); // WARNING: we are using reduced units for the size of the domain.
+    this->grid = std::make_unique<Grid>(this->domainSize, gridSize);
 
     //TODO: call an init function for the particles (random for example)
     // places all the particles in the grid:
@@ -52,8 +50,9 @@ real_t LJSimulation::ComputeTemperature() {
     E /= particles.size(); // Mean of the kineticEnergy
     /**
      * E* = E/eps = 3/2 Kb T/eps => T = 2 eps E* / 3Kb
+     * E = 3/2 Kb T => T = 2 E /(3*Kb)
     */
-    return 2*eps*E/(3*Kb);
+    return 2*E/(3*Kb);
 }
 
 real_t LJSimulation::ComputePressure() {
@@ -70,7 +69,7 @@ void LJSimulation::computeAccelerations() {
         for (auto &particle : cell.getLocalParticles())
         {
             // get the cells where we need to search:
-            auto nearCells = grid->findCells(particle->getPosition(), dc_r);
+            auto nearCells = grid->findCells(particle->getPosition(), dc);
             for (auto &nearCell : nearCells)
             {
                 for (auto &otherParticle : nearCell->getLocalParticles())
@@ -81,14 +80,20 @@ void LJSimulation::computeAccelerations() {
                     if (otherParticle < particle)
                     {
                         // Vector_r is the difference between the positions of the 2 particles
-                        const auto vector_r = particle->getPosition() - otherParticle->getPosition();
+                        // with periodic boudaries:
+                        // if dx > X/2 => dx = X - dx
+                        const auto vector_r = otherParticle->getPosition().PeriodicDiff(particle->getPosition(), Vector2D(this->domainSize, this->domainSize));
                         const real_t r_2 = vector_r.squaredNorm(vector_r); // r^2
                         const real_t r_inv2 = 1./r_2; // r^-2
                         const real_t r_inv6 = std::pow(r_inv2, 3); // r^-6
+                        const real_t simga_6 = std::pow(sigma, 6);
                         /*
                          * VLJ = 4(r^-12 - r^-6) : using reduced units
                          * Fij = dV/dr = 4(-12r^-13 + 6r^-7) = 48(-r_inv^12 + 0.5r_inv^6)*r_inv
                          * 
+                         * without reduced units:
+                         * VLJ = 4 e0 (r^-12 - r^-6) : using reduced units
+                         * Fij = dV/dr = 48(-12r^-13 + 6r^-7)
                          */
                         // the force will be: f = 4 * (0.5 * r_inv6 - r_inv6^2) * r_inv;
                         // in our case, f = a since m = 1
@@ -96,10 +101,10 @@ void LJSimulation::computeAccelerations() {
                         // a = vector_r/r * f = vector_r * 4 * (0.5 * r_inv6 - r_inv6^2) * r_inv^2;
                         // this is why we only need to compute r_inv^2:
                         // f * r_inv is given by:
-                        real_t force_r_inv = 4 * (0.5 * r_inv6 - r_inv6*r_inv6) * r_inv2;
+                        real_t force_r_inv = 48 * eps * (0.5 * r_inv6*simga_6 - r_inv6*r_inv6*simga_6*simga_6) * r_inv2;
                         // set the new accelerations:
-                        particle->setAcceleration(particle->getAcceleration() + vector_r * force_r_inv);
-                        otherParticle->setAcceleration(otherParticle->getAcceleration() + vector_r * -force_r_inv);
+                        particle->setAcceleration(particle->getAcceleration() + vector_r * (force_r_inv / particle->getMass()));
+                        otherParticle->setAcceleration(otherParticle->getAcceleration() + vector_r * (-force_r_inv / particle->getMass()));
                     }
                     
                 }
@@ -122,7 +127,7 @@ void LJSimulation::computeStep(real_t dt) {
     for (auto &p : particles)
     {
         // update the position
-        p.setPosition((p.getPosition() + dt * p.getVelocity()) % this->domainSize_r);
+        p.setPosition((p.getPosition() + dt * p.getVelocity()) % this->domainSize);
         p.setAcceleration(Vector2D(0., 0.)); // reset the acceleration
     }
 
@@ -152,9 +157,9 @@ void LJSimulation::start(real_t simulationDuration, unsigned int nbSteps) {
     this->simulationDuration = simulationDuration;
     this->simulationDuration_r = simulationDuration / sigma;
     this->nbSteps = nbSteps;
-    this->dt = this->simulationDuration_r / this->nbSteps;
+    this->dt = this->simulationDuration / this->nbSteps;
     // compute the simulation
-    for (int i = 0; i < nbSteps; i++)
+    for (size_t i = 0; i < nbSteps; i++)
     {
         computeStep();
     }
@@ -189,7 +194,7 @@ void LJSimulation::exportConfigJSON(std::string path) {
     if (file.is_open()) {
         // csv header:
         file << "{\n"
-             << "\"domainSize\": " << this->domainSize_r
+             << "\"domainSize\": " << this->domainSize
              << "\n}";
     } else {
         std::cerr << "Error: cannot open the file: " << path << '\n';
@@ -202,13 +207,16 @@ void LJSimulation::exportConfigJSON(std::string path) {
 void LJSimulation::placeRandomParticles(unsigned int nbParticles) {
     std::srand(12345);
 
-    for (int i = 0; i < nbParticles; i++)
+    for (size_t i = 0; i < nbParticles; i++)
     {
-        real_t random_px = ((real_t) std::rand()) / (real_t) RAND_MAX * this->domainSize_r;
-        real_t random_py = ((real_t) std::rand()) / (real_t) RAND_MAX * this->domainSize_r;
-        real_t random_vx = ((real_t) std::rand()) / (real_t) RAND_MAX * 100;
-        real_t random_vy = ((real_t) std::rand()) / (real_t) RAND_MAX * 100;
-        particles.push_back(Particle(Vector2D(random_px, random_py), Vector2D(random_vx, random_vy), Vector2D()));
+        // real_t px = ((real_t) std::rand()) / (real_t) RAND_MAX * this->domainSize;
+        // real_t py = ((real_t) std::rand()) / (real_t) RAND_MAX * this->domainSize;
+        real_t vx = (((real_t) std::rand()) / (real_t) RAND_MAX - 0.5) * 5;
+        real_t vy = (((real_t) std::rand()) / (real_t) RAND_MAX -0.5) * 5;
+        auto sqrt_nb = std::ceil(std::sqrt(nbParticles));
+        real_t px = (i % (int) sqrt_nb + 0.5) * this->domainSize/sqrt_nb;
+        real_t py = (i / (int) sqrt_nb + 0.5) * this->domainSize/sqrt_nb;
+        particles.push_back(Particle(Vector2D(px, py), Vector2D(vx, vy), Vector2D(), this->mass));
     }
     // put the particles inside the Grid:
     placeAllParticles();

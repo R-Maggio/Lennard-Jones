@@ -178,6 +178,14 @@ public:
      * @return real_t 
      */
     static real_t squaredDist(const Vector2D& a, const Vector2D& b);
+    
+    /**
+     * @brief compute v1 - v2 ("vectorial distance" distance) with periodic boundaries
+     * 
+     * @param otherVector 
+     * @return Vector2D 
+     */
+    Vector2D PeriodicDiff(const Vector2D& otherVector, const Vector2D& domainSize) const;
 
     /**
      * @brief overload cout to print a vector
