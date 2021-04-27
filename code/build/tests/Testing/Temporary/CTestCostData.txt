@@ -1,3 +1,0 @@
-test_grid 2 0.00450408
-test_particle 2 0.00635147
----
