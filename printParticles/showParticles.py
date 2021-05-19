@@ -61,12 +61,12 @@ def compute_mean_kinetic_energy(Vx, Vy, Masses):
 def compute_kinematic_visc(Vx, Vy, Masses, rho, D, sigma):
     return 2 * compute_mean_kinetic_energy(Vx, Vy, Masses) / (9 * rho * np.pi * D * sigma)
 
-def compute_kinematic_visc_auto_corr(domainSize, Px1, Py1, Vx1, Vy1, Px2, Py2, Vx2, Vy2, Masses, rho):
-    return  3/(4*compute_mean_kinetic_energy(Vx1, Vy1, Masses) * domainSize**2) * (np.sum(Px2 * Masses * Vy2 - Px1 * Masses * Vy1)**2 / Px1.shape[0]) / rho
+def compute_kinematic_visc_auto_corr(domainSizeX, domainSizeY, Px1, Py1, Vx1, Vy1, Px2, Py2, Vx2, Vy2, Masses, rho):
+    return  3/(4*compute_mean_kinetic_energy(Vx1, Vy1, Masses) * (domainSizeX * domainSizeY)) * (np.sum(Px2 * Masses * Vy2 - Px1 * Masses * Vy1)**2 / Px1.shape[0]) / rho
     
 
-def compute_rho(Mass_list, domainSize):
-    return np.sum(Mass_list) / domainSize**2
+def compute_rho(Mass_list, domainSizeX, domainSizeY):
+    return np.sum(Mass_list) / (domainSizeX * domainSizeY)
 
 # def compute_Pi(j, u):
 #     Pi = np.zeros((2, 2))
@@ -75,14 +75,14 @@ def compute_rho(Mass_list, domainSize):
 #             Pi[a, b] = j[a]*u[b]
 #     return Pi
 
-def compute_Pi(domainSize, Ux, Uy):
+def compute_Pi(domainSizeX, domainSizeY, Ux, Uy):
     U = np.array([Ux, Uy])
     Pi = np.zeros((2, 2))
     for a in range(Pi.shape[0]):
         for b in range(Pi.shape[1]):
             for i in range(Ux.shape[0]):
                 Pi[a, b] += U[a, i]*U[b, i]
-    return Pi / domainSize**2
+    return Pi / (domainSizeX * domainSizeY)
 
 def compute_Pi_eq(rho, v, u):
     Pi_eq = np.zeros((2, 2))
@@ -117,7 +117,7 @@ data_mass = []
 if os.path.isfile(os.path.join(dirname, configName)):
     config = pd.read_json(os.path.join(dirname, configName), typ='series')
 else:
-    config = {'domainSize' : 10, 'sigma' : 0.3, 'DT': 1}
+    config = {'domainSizeX' : 10, 'domainSizeY' : 10, 'sigma' : 0.3, 'DT': 1}
 
 # import all the data:
 count = 0
@@ -142,8 +142,8 @@ print(count, " files imported.")
 fig = plt.figure()
 fig.set_size_inches((15, 15))
 line, = plt.plot([], [], 'ro')
-plt.xlim(0, config['domainSize'])
-plt.ylim(0, config['domainSize'])
+plt.xlim(0, config['domainSizeX'])
+plt.ylim(0, config['domainSizeY'])
 plt.title('Particles')
 
 def init():
@@ -164,14 +164,14 @@ ani = FuncAnimation(fig, animate, init_func=init, frames=count, blit=True, inter
 
 # --------------- tests ----------------
 Dt = config['Dt']
-v = config['domainSize']/Dt
+v = config['domainSizeX']/Dt
 V = v * np.array([[0,0],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]])
 W = np.array([4/9, 1/9, 1/36, 1/9, 1/36, 1/9, 1/36, 1/9, 1/36])
 msd = compute_MSD(data_position[0][0], data_position[0][1], data_position[-1][0], data_position[-1][1])
 D = compute_D(msd, Dt)
-rho = compute_rho(data_mass[0], config['domainSize'])
+rho = compute_rho(data_mass[0], config['domainSizeX'], config['domainSizeY'])
 visc = compute_kinematic_visc(data_velocity[-1, 0], data_velocity[-1, 1], data_mass[0], rho, D, config['sigma'])
-visc2 = compute_kinematic_visc_auto_corr(config['domainSize'], data_position[0, 0], data_position[0, 1], data_velocity[0, 0], data_velocity[0, 1], data_position[-1, 0], data_position[-1, 1], data_velocity[-1, 0], data_velocity[-1, 1], data_mass[0], rho)
+visc2 = compute_kinematic_visc_auto_corr(config['domainSizeX'], config['domainSizeY'], data_position[0, 0], data_position[0, 1], data_velocity[0, 0], data_velocity[0, 1], data_position[-1, 0], data_position[-1, 1], data_velocity[-1, 0], data_velocity[-1, 1], data_mass[0], rho)
 print(visc, visc2)
 visc = visc2
 
@@ -184,7 +184,7 @@ jout = rho*u_out
 Pi_list = []
 Pi_neq_list = [] # non equilibrium part of Pi
 for i in range(data_velocity.shape[0]):
-    Pi = compute_Pi(config['domainSize'], data_velocity[i][0], data_velocity[i][1])
+    Pi = compute_Pi(config['domainSizeX'], config['domainSizeY'], data_velocity[i][0], data_velocity[i][1])
     Pi_list.append(Pi)
     Pi_neq_list.append(Pi - compute_Pi_eq(rho, v, np.mean(data_velocity[i], axis=1)))
 Pi_list = np.array(Pi_list)

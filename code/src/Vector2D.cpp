@@ -89,6 +89,12 @@ Vector2D operator%(const Vector2D& vector, real_t scalar) {
     return Vector2D(x, y);
 }
 
+Vector2D operator%(const Vector2D& vector, const Vector2D& otherVector) {
+    const real_t x = std::fmod(std::fmod(vector.x, otherVector.x) + otherVector.x, otherVector.x);
+    const real_t y = std::fmod(std::fmod(vector.y, otherVector.y) + otherVector.y, otherVector.y);
+    return Vector2D(x, y);
+}
+
 // return the euclidean norm of a vector (static function)
 
 real_t Vector2D::norm() const {

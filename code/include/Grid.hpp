@@ -11,9 +11,10 @@ class Cell; // forward declaration
 class Grid
 {
 private:
-    unsigned int gridSize; // gridSize x gridSize = number of cells
-    real_t domainSize; // size of the domain
-    real_t cellSize; // cellSize = domainSize / gridSize;
+    unsigned int gridSizeX; // gridSizeX x gridSizeY = number of cells
+    unsigned int gridSizeY;
+    Vector2D domainSize; // size of the domain
+    Vector2D cellSize; // cellSize = domainSize / gridSize;
     std::vector<Cell> cells;
     LJBoundary boundary; // type of boundary
 
@@ -42,13 +43,20 @@ public:
     // constructors:
     Grid(real_t domainSize, unsigned int gridSize, LJBoundary boundary = LJBoundary::PERIODIC, real_t dc = 1.); // gridSize is determined by the cut-off distance => gridSize should be left empty.
 
+        // constructors:
+    Grid(const Vector2D& domainSize, const Vector2D& gridSize, LJBoundary boundary = LJBoundary::PERIODIC, real_t dc = 1.); // gridSize is determined by the cut-off distance => gridSize should be left empty.
+
     // getters and setters:
 
-    unsigned int getGridSize();
+    Vector2D getGridSize();
 
-    real_t getDomainSize();
+    real_t getGridSizeX();
 
-    real_t getCellSize();
+    real_t getGridSizeY();
+    
+    Vector2D getDomainSize();
+
+    Vector2D getCellSize();
 
     std::vector<Cell>& getCells();
     const std::vector<Cell>& getCells() const;

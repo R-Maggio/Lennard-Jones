@@ -40,7 +40,7 @@ private:
     // cut-off distance:
     real_t dc;
     // domain size:
-    real_t domainSize;
+    Vector2D domainSize;
 
     // we can also apply a constant force on the particles:
     Vector2D constantForce;
@@ -53,7 +53,8 @@ private:
 
     // grid parameters:
     // size of the grid:
-    unsigned int gridSize;
+    unsigned int gridSizeX;
+    unsigned int gridSizeY;
     //* ----------------
     //* Simulation parameters in dimensionless units (reduced units):
     /**
@@ -81,7 +82,9 @@ private:
 public:
 
     LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary = LJBoundary::PERIODIC, const Vector2D& constantForce = Vector2D(0., 0.), const Vector2D& constantAcceleration = Vector2D(0., 0.));
-    //TODO: domainSize and gridSize should be vectors
+
+    LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, const Vector2D& domainSize, const Vector2D& gridSize, LJBoundary boundary = LJBoundary::PERIODIC, const Vector2D& constantForce = Vector2D(0., 0.), const Vector2D& constantAcceleration = Vector2D(0., 0.));
+
     //TODO: add getters and setters
 
     // functions:
