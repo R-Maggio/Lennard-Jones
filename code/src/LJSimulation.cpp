@@ -10,16 +10,18 @@
 #include "Cell.hpp"
 #include "constExpr.hpp"
 
-LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary, const Vector2D<>& constantForce, const Vector2D<>& constantAcceleration) {
+LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, const Vector2D& domainSize, const Vector2D& gridSize, LJBoundary boundary, const Vector2D& constantForce, const Vector2D& constantAcceleration) {
     this->sigma = sigma;
     this->mass = mass;
     this->eps = eps;
     this->dc = dc;
     this->domainSize = domainSize;
-    this->gridSize = gridSize;
+    this->gridSizeX = gridSize.x;
+    this->gridSizeY = gridSize.y;
     this->boundary = boundary;
     this->constantForce = constantForce;
     this->constantAcceleration = constantAcceleration;
+    // TODO: pass particle list
     // reduced units:
     /**
      * With the reduced units:
@@ -31,11 +33,15 @@ LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, rea
      * 
     */
     // allocate memory for the grid:
-    this->grid = std::make_unique<Grid>(this->domainSize, gridSize);
+    this->grid = std::make_unique<Grid>(this->domainSize, gridSize, boundary, dc);
 
     //TODO: call an init function for the particles (random for example)
     // places all the particles in the grid:
     placeAllParticles(); //! might be called in another place
+}
+
+LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary, const Vector2D& constantForce, const Vector2D& constantAcceleration):
+    LJSimulation(sigma, mass, eps, dc, Vector2D(domainSize, domainSize), Vector2D(gridSize, gridSize), boundary, constantForce, constantAcceleration) { // call the other constructor
 }
 
 void LJSimulation::placeAllParticles() {
@@ -60,7 +66,7 @@ real_t LJSimulation::ComputeTemperature() {
 
 real_t LJSimulation::ComputePressure() {
     // PV = nRT => P = nRT/V
-    return particles.size()*R_*ComputeTemperature()/(domainSize*domainSize);
+    return particles.size()*R_*ComputeTemperature()/(domainSize.x*domainSize.y);
 }
 
 void LJSimulation::computeAccelerations() {
@@ -84,7 +90,7 @@ void LJSimulation::computeAccelerations() {
                         // Vector_r is the difference between the positions of the 2 particles
                         // with periodic boudaries:
                         // if dx > X/2 => dx = X - dx
-                        const auto vector_r = otherParticle->getPosition().PeriodicDiff(particle->getPosition(), Vector2D(this->domainSize, this->domainSize));
+                        const auto vector_r = otherParticle->getPosition().PeriodicDiff(particle->getPosition(), domainSize);
                         const real_t r_2 = vector_r.squaredNorm(vector_r); // r^2
                         
                         if (r_2 <= dc) { // test if the distance is smaller than the cut-off distance
@@ -135,10 +141,10 @@ void LJSimulation::computeStep(real_t dt) {
         if (this->boundary == LJBoundary::PERIODIC) { // Periodic boundaries
             p.setPosition((p.getPosition() + dt * p.getVelocity()) % this->domainSize);
         } else if (this->boundary == LJBoundary::POISSEUILLE) { // Periodic boundaries
-            const auto px = std::fmod(std::fmod(p.getPosition().x  + dt * p.getVelocity().x, domainSize) + domainSize, domainSize);
+            const auto px = std::fmod(std::fmod(p.getPosition().x  + dt * p.getVelocity().x, domainSize.x) + domainSize.x, domainSize.x);
             auto py = p.getPosition().y + dt * p.getVelocity().y;
-            if (py > domainSize) {
-                py = domainSize;
+            if (py > domainSize.y) {
+                py = domainSize.y;
                 // reverse velocity:
                 p.setVelocity(-p.getVelocity());
             } else if (py < 0.) {
@@ -216,7 +222,8 @@ void LJSimulation::exportConfigJSON(std::string path, const std::map<std::string
     if (file.is_open()) {
         // csv header:
         file << "{\n"
-             << "\"domainSize\": " << this->domainSize << ",\n"
+             << "\"domainSizeX\": " << this->domainSize.x << ",\n"
+             << "\"domainSizeY\": " << this->domainSize.y << ",\n"
              << "\"sigma\": " << this->sigma << ",\n";
         // import custom parameters:
         for (auto const& param : customParam)
@@ -245,8 +252,8 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles) {
         real_t vx = (((real_t) std::rand()) / (real_t) RAND_MAX - 0.5) * 5;
         real_t vy = (((real_t) std::rand()) / (real_t) RAND_MAX -0.5) * 5;
         auto sqrt_nb = std::ceil(std::sqrt(nbParticles));
-        real_t px = (i % (int) sqrt_nb + 0.5) * this->domainSize/sqrt_nb;
-        real_t py = (i / (int) sqrt_nb + 0.5) * this->domainSize/sqrt_nb;
+        real_t px = (i % (int) sqrt_nb + 0.5) * this->domainSize.x/sqrt_nb;
+        real_t py = (i / (int) sqrt_nb + 0.5) * this->domainSize.y/sqrt_nb;
         particles.push_back(Particle(Vector2D(px, py), Vector2D(vx, vy), this->constantAcceleration + (this->constantForce / this->mass), this->mass));
     }
     // put the particles inside the Grid:
@@ -260,8 +267,8 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles, real_t muX, re
         real_t vx = muX + sigmaX * normalDistribution(randomGenerator);
         real_t vy = muY + (sigmaY/sigmaX) * corr * (vx - muX) + std::sqrt((1-corr*corr)*sigmaY*sigmaY) * normalDistribution(randomGenerator);
         auto sqrt_nb = std::ceil(std::sqrt(nbParticles));
-        real_t px = (i % (int) sqrt_nb + 0.5) * this->domainSize/sqrt_nb;
-        real_t py = (i / (int) sqrt_nb + 0.5) * this->domainSize/sqrt_nb;
+        real_t px = (i % (int) sqrt_nb + 0.5) * this->domainSize.x/sqrt_nb;
+        real_t py = (i / (int) sqrt_nb + 0.5) * this->domainSize.y/sqrt_nb;
         particles.push_back(Particle(Vector2D(px, py), Vector2D(vx, vy), Vector2D(), this->mass));
     }
     // put the particles inside the Grid:

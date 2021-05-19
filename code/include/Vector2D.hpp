@@ -140,6 +140,15 @@ public:
     friend Vector2D operator%(const Vector2D& vector, T scalar);
 
     /**
+     * @brief element by element modulo operation on each element
+     * 
+     * @param vector 
+     * @param otherVector
+     * @return Vector2D 
+     */
+    friend Vector2D operator%(const Vector2D& vector, const Vector2D& otherVector);
+
+    /**
      * @brief return the euclidean norm of a vector (static function)
      * 
      * @return T 

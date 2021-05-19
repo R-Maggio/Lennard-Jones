@@ -13,8 +13,8 @@ int main(int, char**) {
     real_t mass = 1.;
     real_t eps = 1e-6;
     real_t dc = 2.5 * sigma;
-    real_t domainSize = 15.;
-    size_t gridSize = 10;
+    Vector2D domainSize = {15., 15.};
+    Vector2D gridSize = {10, 10};
     auto constantAcceleration = Vector2D(1., 0.);
     auto constantForce = Vector2D(0., 0.);
     LJBoundary boundary = LJBoundary::POISSEUILLE;
