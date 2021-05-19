@@ -3,18 +3,16 @@
 #include "Vector2D.hpp"
 #include "Cell.hpp"
 
-Grid::Grid(real_t domainSize, unsigned int gridSize) {
-    this->domainSize = domainSize;
-    this->gridSize = gridSize;
-    this->cellSize = domainSize / gridSize;
-    initGrid();
-}
 
-//TODO: remove this fct. gridSize will be determine in the LJSimulation class.
-Grid::Grid(real_t domainSize, unsigned int gridSize, real_t dc) {
+Grid::Grid(real_t domainSize, unsigned int gridSize, LJBoundary boundary, real_t dc) {
+    this->boundary = boundary;
     this->domainSize = domainSize;
-    // since we know the cut-off distance, we can compute the size of the domain:
-    this->gridSize = domainSize / dc;
+    if (gridSize == 0) {
+        // since we know the cut-off distance, we can compute the size of the domain:
+        this->gridSize = domainSize / dc;
+    } else {
+        this->gridSize = gridSize;
+    }
     this->cellSize = domainSize / this->gridSize;
     initGrid();
 }
@@ -40,7 +38,7 @@ void Grid::initGrid() {
         }
         
     }
-    
+    initCellsNeighbors(); // init the neighbors of each cell
 }
 
 void Grid::placeParticle(Particle* particle) {
@@ -57,22 +55,58 @@ void Grid::placeParticle(Particle* particle) {
 std::vector<Cell*> Grid::findCells(const Vector2D& position, real_t dc) {
     //! WARNING: we suppose that dc <= cellSize.
     //! dc is unused...
-    //! bottleneck
-    // TODO: each cell must know its neighbors
-    // index of the cell:
-    unsigned int i = (int) (position.x / cellSize);
-    unsigned int j = (int) (position.y / cellSize);
     // empty vector:
-    std::vector<Cell*> nearCells(9);
-    // 9 neighboring cells in total:
-    for (int y_shift = 0; y_shift < 3; y_shift++)
+    std::vector<Cell*> nearCells;
+    // index of the cell:
+    unsigned int i = (((int) (position.x / cellSize)) + gridSize)%gridSize; // %gridSize because of the peridical boundaries. + gridSize to behave like a "true" modulus
+    unsigned int j = (((int) (position.y / cellSize)) + gridSize)%gridSize;
+    Cell* currentCell = &cells[j*gridSize + i];
+
+    nearCells = currentCell->getNeighbors();
+    nearCells.push_back(currentCell);
+    return nearCells;
+}
+
+std::vector<Cell*> Grid::findNeighbors(size_t i, size_t j) {
+    // empty vector:
+    std::vector<Cell*> neighbors;
+    // depend on the boundaries:
+    if (boundary == LJBoundary::PERIODIC) // Periodic boundaries
     {
-        for (int x_shift = 0; x_shift < 3; x_shift++)
+        // 8 neighboring cells in total:
+        for (int y_shift = -1; y_shift < 2; y_shift++)
         {
-            // %gridSize because of the peridical boundaries
-            nearCells[x_shift*3 + y_shift] = &cells[((j + y_shift - 1 + gridSize)%gridSize)*gridSize + ((i + x_shift - 1 + gridSize)%gridSize)]; // + gridSize to behave like a "true" modulus
+            for (int x_shift = -1; x_shift < 2; x_shift++)
+            {
+                // %gridSize because of the peridical boundaries
+                if (x_shift != 0 || y_shift != 0) // to avoid including itself
+                    neighbors.push_back(&cells[((j + y_shift + gridSize)%gridSize)*gridSize + ((i + x_shift + gridSize)%gridSize)]); // + gridSize to behave like a "true" modulus
+            }
+        }
+    } else if (boundary == LJBoundary::POISSEUILLE) { // boundaries for the Poisseuille flow experiment
+        // the code is repeated for performance reasons (test boundary only once)
+        for (int y_shift = -1; y_shift < 2; y_shift++)
+        {
+            for (int x_shift = -1; x_shift < 2; x_shift++)
+            {
+                // %gridSize because of the peridical boundaries
+                if ((x_shift != 0 || y_shift != 0) && (j + y_shift < gridSize && j + y_shift >= 0 && i + x_shift < gridSize && i + x_shift >= 0)) // to avoid including itself + Poisseuille boundaries
+                    neighbors.push_back(&cells[((j + y_shift + gridSize)%gridSize)*gridSize + ((i + x_shift + gridSize)%gridSize)]); // + gridSize to behave like a "true" modulus
+            }
+        } 
+    }
+    return neighbors;
+}
+
+void Grid::initCellsNeighbors() {
+    for (size_t j = 0; j < gridSize; j++) // y direction
+    {
+        for (size_t i = 0; i < gridSize; i++) // x direction
+        {
+            cells[j*gridSize + i].setNeighbors(findNeighbors(i, j)); // init the neighbors
         }
         
     }
-    return nearCells;
+    
+    
 }

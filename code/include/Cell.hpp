@@ -27,7 +27,7 @@ private:
     // lower left and upper right coordinates of the cell:
     Vector2D ll{};
     Vector2D ur{};
-    //TODO: neighbor list in the cell
+    std::vector<Cell*> neighbors; // list of neighbors cells
     // pointer on the grid:
     Grid* grid = nullptr;
     // list of particles inside the cell. we only store pointers:
@@ -38,6 +38,8 @@ public:
     Cell() {};
     Cell(const Vector2D& ll, const Vector2D& ur, Grid* grid): ll{ll}, ur{ur}, grid{grid} {}
     Cell(const Vector2D& ll, const Vector2D& ur, Grid* grid, std::vector<Particle*> localParticles): ll{ll}, ur{ur}, grid{grid}, localParticles{localParticles} {}
+    Cell(const Vector2D& ll, const Vector2D& ur, Grid* grid, std::vector<Cell*> neighbors): ll{ll}, ur{ur}, grid{grid}, neighbors{neighbors} {}
+    Cell(const Vector2D& ll, const Vector2D& ur, Grid* grid, std::vector<Particle*> localParticles, std::vector<Cell*> neighbors): ll{ll}, ur{ur}, grid{grid}, localParticles{localParticles}, neighbors{neighbors} {}
 
     // setters and getters:
 
@@ -55,6 +57,9 @@ public:
     std::vector<Particle*>& getLocalParticles();
     const std::vector<Particle*>& getLocalParticles() const;
     void setLocalParticles(std::vector<Particle*> localParticles);
+
+    std::vector<Cell*> getNeighbors();
+    void setNeighbors(std::vector<Cell*> neighbors);
     // functions:
 
     /**

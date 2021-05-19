@@ -47,6 +47,13 @@ public:
     Vector2D operator-(const Vector2D& otherVector) const;
 
     /**
+     * @brief unary minus operator
+     * 
+     * @return Vector2D 
+     */
+    Vector2D operator-() const;
+
+    /**
      * @brief add a vector to the current vector
      * 
      * @param otherVector 

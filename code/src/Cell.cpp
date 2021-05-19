@@ -50,6 +50,14 @@ void Cell::addParticle(Particle* particle) {
     this->localParticles.push_back(particle);
 }
 
+std::vector<Cell*> Cell::getNeighbors() {
+    return neighbors;
+}
+
+void Cell::setNeighbors(std::vector<Cell*> neighbors) {
+    this->neighbors = neighbors;
+}
+
 bool Cell::isPositionInCell(const Vector2D& position) {
     if (ll.x <= position.x && ll.y <= position.y && position.x <= ur.x && position.y <= ur.y)
         return true;

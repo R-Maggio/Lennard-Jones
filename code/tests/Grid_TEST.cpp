@@ -4,13 +4,14 @@
 #include "../include/Vector2D.hpp"
 #include "../include/Particle.hpp"
 #include "../include/Grid.hpp"
+#include "../include/typeDefinitions.hpp"
 
 
 int main(int argc, char const *argv[])
 {
     //! TEST of the Grid/Cell class:
     
-    Grid grid(100, 0, 2.6);
+    Grid grid(100., 0, LJBoundary::PERIODIC, 2.6);
     std::cout << "domainSize:" << grid.getDomainSize() << ", gridSize:" << grid.getGridSize() << ", cellSize:" << grid.getCellSize() << '\n';
 
     std::cout << " grid.getCells()[39].getLl():   " << grid.getCells()[39].getLl() << '\n';

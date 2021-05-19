@@ -1,3 +1,5 @@
 {
-"domainSize": 15
+"domainSize": 15,
+"sigma": 0.5,
+"Dt":1.000000,
 }

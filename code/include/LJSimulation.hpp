@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory> // std::unique_ptr
 #include <string>
+#include <map>
 
 #include "typeDefinitions.hpp"
 #include "Vector2D.hpp"
@@ -41,6 +42,15 @@ private:
     // domain size:
     real_t domainSize;
 
+    // we can also apply a constant force on the particles:
+    Vector2D constantForce;
+    // or/and a constant acceleration:
+    Vector2D constantAcceleration;
+    
+    // type of boundary:
+    LJBoundary boundary;
+
+
     // grid parameters:
     // size of the grid:
     unsigned int gridSize;
@@ -70,7 +80,7 @@ private:
 
 public:
 
-    LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize);
+    LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary = LJBoundary::PERIODIC, const Vector2D& constantForce = Vector2D(0., 0.), const Vector2D& constantAcceleration = Vector2D(0., 0.));
     //TODO: domainSize and gridSize should be vectors
     //TODO: add getters and setters
 
@@ -114,7 +124,7 @@ public:
      * @brief start the simulation
      * 
      * @param simulationDuration 
-     * @param nbSteps 
+     * @param nbSteps
      */
     void start(real_t simulationDuration, unsigned int nbSteps);
 
@@ -129,8 +139,9 @@ public:
      * @brief export the configuration
      * 
      * @param path
+     * @param customParam
      */
-    void exportConfigJSON(std::string path);
+    void exportConfigJSON(std::string path, const std::map<std::string, std::string>& customParam = {});
 
     /**
      * @brief place randomly n particles inside the grid
@@ -138,4 +149,6 @@ public:
      * @param nbParticles 
      */
     void placeRandomParticles(unsigned int nbParticles);
+
+    void placeRandomParticles(unsigned int nbParticles, real_t muX, real_t muY, real_t sigmaX, real_t sigmaY, real_t corr);
 };

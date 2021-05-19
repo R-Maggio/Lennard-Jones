@@ -15,6 +15,7 @@ private:
     real_t domainSize; // size of the domain
     real_t cellSize; // cellSize = domainSize / gridSize;
     std::vector<Cell> cells;
+    LJBoundary boundary; // type of boundary
 
     /**
      * @brief private function that initialize the grid
@@ -22,11 +23,24 @@ private:
      */
     void initGrid();
 
+    /**
+     * @brief init the Cells Neighbors
+     * 
+     */
+    void initCellsNeighbors();
+
+    /**
+     * @brief find the neighbors of one cell at position (i, j)
+     * 
+     * @param i
+     * @param j 
+     * @return std::vector<Cell*> 
+     */
+    std::vector<Cell*> findNeighbors(size_t i, size_t j);
+
 public:
     // constructors:
-    Grid(real_t domainSize, unsigned int gridSize);
-    //TODO: remove this constructor. gridSize will be determine in the LJSimulation class.
-    Grid(real_t domainSize, unsigned int gridSize, real_t dc); // gridSize is determined by the cut-off distance => gridSize should be left empty.
+    Grid(real_t domainSize, unsigned int gridSize, LJBoundary boundary = LJBoundary::PERIODIC, real_t dc = 1.); // gridSize is determined by the cut-off distance => gridSize should be left empty.
 
     // getters and setters:
 

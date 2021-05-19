@@ -22,6 +22,11 @@ Vector2D Vector2D::operator+(const Vector2D& otherVector) const {
 Vector2D Vector2D::operator-(const Vector2D& otherVector) const {
     return Vector2D(this->x - otherVector.x, this->y - otherVector.y);
 }
+
+Vector2D Vector2D::operator-() const {
+    return Vector2D(-this->x, -this->y);
+}
+
 // add a vector to the current vector
 
 Vector2D& Vector2D::operator+=(const Vector2D& otherVector) {
@@ -76,7 +81,7 @@ Vector2D& Vector2D::operator/=(real_t scalar) {
     return *this; 
 }
 
-// return the true modulo operation
+// return the true modulus operation
 
 Vector2D operator%(const Vector2D& vector, real_t scalar) {
     const real_t x = std::fmod(std::fmod(vector.x, scalar) + scalar, scalar);
