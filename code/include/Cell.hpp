@@ -25,8 +25,8 @@ class Cell
 // }
 private:
     // lower left and upper right coordinates of the cell:
-    Vector2D ll{};
-    Vector2D ur{};
+    Vector2D<> ll{};
+    Vector2D<> ur{};
     std::vector<Cell*> neighbors; // list of neighbors cells
     // pointer on the grid:
     Grid* grid = nullptr;
@@ -36,20 +36,20 @@ private:
 public:
     // constructors:
     Cell() {};
-    Cell(const Vector2D& ll, const Vector2D& ur, Grid* grid): ll{ll}, ur{ur}, grid{grid} {}
-    Cell(const Vector2D& ll, const Vector2D& ur, Grid* grid, std::vector<Particle*> localParticles): ll{ll}, ur{ur}, grid{grid}, localParticles{localParticles} {}
-    Cell(const Vector2D& ll, const Vector2D& ur, Grid* grid, std::vector<Cell*> neighbors): ll{ll}, ur{ur}, grid{grid}, neighbors{neighbors} {}
-    Cell(const Vector2D& ll, const Vector2D& ur, Grid* grid, std::vector<Particle*> localParticles, std::vector<Cell*> neighbors): ll{ll}, ur{ur}, grid{grid}, localParticles{localParticles}, neighbors{neighbors} {}
+    Cell(const Vector2D<>& ll, const Vector2D<>& ur, Grid* grid): ll{ll}, ur{ur}, grid{grid} {}
+    Cell(const Vector2D<>& ll, const Vector2D<>& ur, Grid* grid, std::vector<Particle*> localParticles): ll{ll}, ur{ur}, grid{grid}, localParticles{localParticles} {}
+    Cell(const Vector2D<>& ll, const Vector2D<>& ur, Grid* grid, std::vector<Cell*> neighbors): ll{ll}, ur{ur}, grid{grid}, neighbors{neighbors} {}
+    Cell(const Vector2D<>& ll, const Vector2D<>& ur, Grid* grid, std::vector<Particle*> localParticles, std::vector<Cell*> neighbors): ll{ll}, ur{ur}, grid{grid}, localParticles{localParticles}, neighbors{neighbors} {}
 
     // setters and getters:
 
-    void set(const Vector2D& ll, const Vector2D& ur, Grid* grid);
+    void set(const Vector2D<>& ll, const Vector2D<>& ur, Grid* grid);
 
-    Vector2D getLl();
-    void setLl(const Vector2D& ll);
+    Vector2D<> getLl();
+    void setLl(const Vector2D<>& ll);
 
-    Vector2D getUr();
-    void setUr(const Vector2D& ur);
+    Vector2D<> getUr();
+    void setUr(const Vector2D<>& ur);
 
     Grid* getGrid();
     void setGrid(Grid* grid);
@@ -77,6 +77,6 @@ public:
      * @return true if the point is in the cell
      * @return false if the point is not in the cell
      */
-    bool isPositionInCell(const Vector2D& position);
+    bool isPositionInCell(const Vector2D<>& position);
 };
 

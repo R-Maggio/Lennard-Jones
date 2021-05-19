@@ -4,25 +4,25 @@
 #include "Vector2D.hpp"
 
 
-void Cell::set(const Vector2D& ll, const Vector2D& ur, Grid* grid) {
+void Cell::set(const Vector2D<>& ll, const Vector2D<>& ur, Grid* grid) {
     this->ll = ll;
     this->ur = ur;
     this->grid = grid;
 }
 
-Vector2D Cell::getLl() {
+Vector2D<> Cell::getLl() {
     return this->ll;
 }
 
-void Cell::setLl(const Vector2D& ll) {
+void Cell::setLl(const Vector2D<>& ll) {
     this->ll = ll;
 }
 
-Vector2D Cell::getUr() {
+Vector2D<> Cell::getUr() {
     return this->ur;
 }
 
-void Cell::setUr(const Vector2D& ur) {
+void Cell::setUr(const Vector2D<>& ur) {
     this->ur = ur;
 }
 
@@ -58,7 +58,7 @@ void Cell::setNeighbors(std::vector<Cell*> neighbors) {
     this->neighbors = neighbors;
 }
 
-bool Cell::isPositionInCell(const Vector2D& position) {
+bool Cell::isPositionInCell(const Vector2D<>& position) {
     if (ll.x <= position.x && ll.y <= position.y && position.x <= ur.x && position.y <= ur.y)
         return true;
     return false;

@@ -10,7 +10,7 @@
 #include "Cell.hpp"
 #include "constExpr.hpp"
 
-LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary, const Vector2D& constantForce, const Vector2D& constantAcceleration) {
+LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary, const Vector2D<>& constantForce, const Vector2D<>& constantAcceleration) {
     this->sigma = sigma;
     this->mass = mass;
     this->eps = eps;

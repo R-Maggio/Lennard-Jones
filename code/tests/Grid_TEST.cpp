@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
     grid.placeParticle(&p1);
     std::cout << " grid.getCells()[39].getLocalParticles()[0]->getPosition():   " << grid.getCells()[39].getLocalParticles()[0]->getPosition() << '\n';
 
-    auto nearCells = grid.findCells(Vector2D(1, 1), 2.5);
+    auto nearCells = grid.findCells(Vector2D(1., 1), 2.5);
     for (auto &e : nearCells)
     {
         std::cout << "grid.findCells(Vector2D(1, 1), 2.5)[i] :  " << e->getLl() << '\n';

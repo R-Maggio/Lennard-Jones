@@ -7,17 +7,18 @@
  * @brief 2D vector class
  * 
  */
+template <typename T = real_t>
 class Vector2D
 {
 private:
 
 public:
     // public x and y for better performances:
-    real_t x {0.};
-    real_t y {0.};
+    T x {0.};
+    T y {0.};
     //**----------
     Vector2D(): x{0.}, y{0.} {}
-    Vector2D(real_t x, real_t y): x{x}, y{y} {}
+    Vector2D(T x, T y): x{x}, y{y} {}
     //TODO: remove copy constructor
     Vector2D(const Vector2D& v): x{v.x}, y{v.y} {}
     //**----------
@@ -28,7 +29,7 @@ public:
      * @param x 
      * @param y 
      */
-    void set(real_t x, real_t y);
+    void set(T x, T y);
 
     /**
      * @brief sum of 2 vectors and returns a new vector
@@ -84,7 +85,7 @@ public:
      * @param scalar 
      * @return Vector2D 
      */
-    friend Vector2D operator*(const Vector2D& vector, real_t scalar);
+    friend Vector2D operator*(const Vector2D& vector, T scalar);
 
     /**
      * @brief return result of multiplying a scalar by a vecor
@@ -93,7 +94,7 @@ public:
      * @param scalar 
      * @return Vector2D 
      */
-    friend Vector2D operator*(real_t scalar, const Vector2D& vector);
+    friend Vector2D operator*(T scalar, const Vector2D& vector);
 
     /**
      * @brief *= operator overlading. multiply by scalar
@@ -101,7 +102,7 @@ public:
      * @param scalar
      * @return Vector2D& 
      */
-    Vector2D& operator*=(real_t scalar);
+    Vector2D& operator*=(T scalar);
 
     /**
      * @brief return result of dividing a vector by a scalar
@@ -110,7 +111,7 @@ public:
      * @param scalar 
      * @return Vector2D 
      */
-    friend Vector2D operator/(const Vector2D& vector, real_t scalar);
+    friend Vector2D operator/(const Vector2D& vector, T scalar);
 
     /**
      * @brief return result of dividing a scalar by a vecor
@@ -119,7 +120,7 @@ public:
      * @param scalar 
      * @return Vector2D 
      */
-    friend Vector2D operator/(real_t scalar, const Vector2D& vector);
+    friend Vector2D operator/(T scalar, const Vector2D& vector);
 
     /**
      * @brief /= operator overlading. divide by scalar
@@ -127,7 +128,7 @@ public:
      * @param scalar
      * @return Vector2D& 
      */
-    Vector2D& operator/=(real_t scalar);
+    Vector2D& operator/=(T scalar);
 
     /**
      * @brief apply the true modulo operation on each element
@@ -136,12 +137,12 @@ public:
      * @param scalar 
      * @return Vector2D 
      */
-    friend Vector2D operator%(const Vector2D& vector, real_t scalar);
+    friend Vector2D operator%(const Vector2D& vector, T scalar);
 
     /**
      * @brief return the euclidean norm of a vector (static function)
      * 
-     * @return real_t 
+     * @return T 
      */
     static real_t norm(const Vector2D& vector);
 
@@ -149,7 +150,7 @@ public:
      * @brief return the euclidean norm of a vector
      * 
      * @param vector 
-     * @return real_t 
+     * @return T 
      */
     real_t norm() const;
 
@@ -157,14 +158,14 @@ public:
      * @brief return the absolute squared norm of a vector (static function)
      * 
      * @param vector 
-     * @return real_t 
+     * @return T 
      */
     static real_t squaredNorm(const Vector2D& vector);
 
     /**
      * @brief return the absolute squared norm of a vector
      * 
-     * @return real_t 
+     * @return T 
      */
     real_t squaredNorm() const;
 
@@ -173,7 +174,7 @@ public:
      * 
      * @param a 
      * @param b 
-     * @return real_t 
+     * @return T 
      */
     static real_t dist(const Vector2D& a, const Vector2D& b);
 
@@ -182,7 +183,7 @@ public:
      * 
      * @param a 
      * @param b 
-     * @return real_t 
+     * @return T 
      */
     static real_t squaredDist(const Vector2D& a, const Vector2D& b);
     

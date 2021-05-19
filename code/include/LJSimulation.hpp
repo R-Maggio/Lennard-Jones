@@ -43,9 +43,9 @@ private:
     real_t domainSize;
 
     // we can also apply a constant force on the particles:
-    Vector2D constantForce;
+    Vector2D<> constantForce;
     // or/and a constant acceleration:
-    Vector2D constantAcceleration;
+    Vector2D<> constantAcceleration;
     
     // type of boundary:
     LJBoundary boundary;
@@ -80,7 +80,7 @@ private:
 
 public:
 
-    LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary = LJBoundary::PERIODIC, const Vector2D& constantForce = Vector2D(0., 0.), const Vector2D& constantAcceleration = Vector2D(0., 0.));
+    LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary = LJBoundary::PERIODIC, const Vector2D<>& constantForce = Vector2D(0., 0.), const Vector2D<>& constantAcceleration = Vector2D(0., 0.));
     //TODO: domainSize and gridSize should be vectors
     //TODO: add getters and setters
 
