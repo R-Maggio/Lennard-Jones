@@ -13,3 +13,9 @@ make
 ```
 ./code/build/lennard_jones
 ```
+
+## python show particles
+```
+cd printParticles
+python showParticles.py
+```
