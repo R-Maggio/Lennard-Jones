@@ -50,6 +50,8 @@ private:
     // type of boundary:
     LJBoundary boundary;
 
+    // number of particles:
+    unsigned long numberOfParticles = 0;
 
     // grid parameters:
     // size of the grid:
@@ -70,8 +72,21 @@ private:
     real_t dc_r;
     real_t domainSize_r;
     //*------------------
-    
+    //* variable to compute the viscosity
+    // viscosity correction (because of the periodic boundaries):
+    Vector2D viscosity_correction{0., 0.};
+    // Helfand moment Gxy(0) and Gyx(0)
+    Vector2D G0;
+
     //* private functions:
+
+    /**
+     * @brief compute Helfand moment Gxy(t) and Gyx(t)
+     * 
+     * @return Vector2D 
+     */
+    Vector2D computeHelfandMoment();
+
     /**
      * @brief places all the particles in the grid.
      * 
@@ -88,6 +103,8 @@ public:
     //TODO: add getters and setters
 
     // functions:
+
+    unsigned long getNumberOfParticles() {return numberOfParticles;};
 
     /**
      * @brief compute the temperature inside the domaine
@@ -154,4 +171,34 @@ public:
     void placeRandomParticles(unsigned int nbParticles);
 
     void placeRandomParticles(unsigned int nbParticles, real_t muX, real_t muY, real_t sigmaX, real_t sigmaY, real_t corr);
+
+    /**
+     * @brief compute the density inside the domain
+     * 
+     * @return real_t 
+     */
+    real_t computeDensity();
+
+    /**
+     * @brief Conpute the mean kinetic energy of the system 
+     * 
+     */
+    real_t computeMeanKineticEnergy();
+
+    /**
+     * @brief compute the dynamic viscosity coeficient
+     * 
+     * @param positionDirectionX direction of the position to compute the coefficient
+     * @return real_t 
+     */
+    real_t computeDynamicViscosity(bool positionDirectionX = true);
+
+    /**
+     * @brief compute the dynamic viscosity coeficient
+     * 
+     * @param t total time of the simulation
+     * @param positionDirectionX direction of the position to compute the coefficient
+     * @return real_t 
+     */
+    real_t computeDynamicViscosity(real_t t = 0., bool positionDirectionX = true);
 };

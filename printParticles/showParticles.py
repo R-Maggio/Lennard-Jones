@@ -55,14 +55,10 @@ def compute_MSD(P1x, P1y, P2x, P2y):
     return np.mean(np.sqrt((P1x - P2x)**2 + (P1y - P2y)**2))
 
 def compute_mean_kinetic_energy(Vx, Vy, Masses):
-    return 0.5 * np.mean(Masses * (Vx**2 + Vy**2)) 
-    
+    return 0.5 * np.mean(Masses * (Vx**2 + Vy**2))
 
-def compute_kinematic_visc(Vx, Vy, Masses, rho, D, sigma):
-    return 2 * compute_mean_kinetic_energy(Vx, Vy, Masses) / (9 * rho * np.pi * D * sigma)
-
-def compute_kinematic_visc_auto_corr(domainSizeX, domainSizeY, Px1, Py1, Vx1, Vy1, Px2, Py2, Vx2, Vy2, Masses, rho):
-    return  3/(4*compute_mean_kinetic_energy(Vx1, Vy1, Masses) * (domainSizeX * domainSizeY)) * (np.sum(Px2 * Masses * Vy2 - Px1 * Masses * Vy1)**2 / Px1.shape[0]) / rho
+def compute_kinematic_visc_auto_corr(domainSizeX, domainSizeY, Px1, Py1, Vx1, Vy1, Px2, Py2, Vx2, Vy2, Masses, rho, Dt):
+    return  3/(4 * rho * (domainSizeX * domainSizeY) * compute_mean_kinetic_energy(Vx2, Vy2, Masses) * Px1.shape[0] * Dt) * (np.sum(Px2 * Masses * Vy2 - Px1 * Masses * Vy1)**2)
     
 
 def compute_rho(Mass_list, domainSizeX, domainSizeY):
@@ -170,10 +166,12 @@ W = np.array([4/9, 1/9, 1/36, 1/9, 1/36, 1/9, 1/36, 1/9, 1/36])
 msd = compute_MSD(data_position[0][0], data_position[0][1], data_position[-1][0], data_position[-1][1])
 D = compute_D(msd, Dt)
 rho = compute_rho(data_mass[0], config['domainSizeX'], config['domainSizeY'])
-visc = compute_kinematic_visc(data_velocity[-1, 0], data_velocity[-1, 1], data_mass[0], rho, D, config['sigma'])
-visc2 = compute_kinematic_visc_auto_corr(config['domainSizeX'], config['domainSizeY'], data_position[0, 0], data_position[0, 1], data_velocity[0, 0], data_velocity[0, 1], data_position[-1, 0], data_position[-1, 1], data_velocity[-1, 0], data_velocity[-1, 1], data_mass[0], rho)
-print(visc, visc2)
-visc = visc2
+# visc = compute_kinematic_visc(data_velocity[-1, 0], data_velocity[-1, 1], data_mass[0], rho, D, config['sigma'])
+visc = compute_kinematic_visc_auto_corr(config['domainSizeX'], config['domainSizeY'], data_position[0, 0], data_position[0, 1], data_velocity[0, 0], data_velocity[0, 1], data_position[-1, 0], data_position[-1, 1], data_velocity[-1, 0], data_velocity[-1, 1], data_mass[0], rho, Dt)
+print("visc", visc)
+print("kinetic mean", compute_mean_kinetic_energy(data_velocity[-1, 0], data_velocity[-1, 1], data_mass[0]))
+print("rho", compute_rho(data_mass[0], config['domainSizeX'], config['domainSizeY']))
+print("number of particles: ", data_velocity[0, 1].shape[0])
 
 tau = compute_tau(visc, Dt, v)
 u_in = np.mean(data_velocity[0], axis=1)

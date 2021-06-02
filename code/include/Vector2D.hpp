@@ -96,6 +96,22 @@ public:
     friend Vector2D operator*(real_t scalar, const Vector2D& vector);
 
     /**
+     * @brief element by element product
+     * 
+     * @param otherVector 
+     * @return Vector2D
+     */
+    Vector2D operator*(const Vector2D& otherVector) const;
+
+    /**
+     * @brief element by element division
+     * 
+     * @param otherVector 
+     * @return Vector2D
+     */
+    Vector2D operator/(const Vector2D& otherVector) const;
+
+    /**
      * @brief *= operator overlading. multiply by scalar
      * 
      * @param scalar
@@ -202,6 +218,13 @@ public:
      * @return Vector2D 
      */
     Vector2D PeriodicDiff(const Vector2D& otherVector, const Vector2D& domainSize) const;
+
+    /**
+     * @brief reverse the order of the elements: {x,y} => {y,x}
+     * 
+     * @return Vector2D 
+     */
+    Vector2D flip() const;
 
     /**
      * @brief overload cout to print a vector

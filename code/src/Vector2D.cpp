@@ -43,6 +43,18 @@ Vector2D& Vector2D::operator-=(const Vector2D& otherVector) {
     return *this; 
 }
 
+//element by element product of 2 vectors and returns a new vector
+
+Vector2D Vector2D::operator*(const Vector2D& otherVector) const {
+    return Vector2D(this->x * otherVector.x, this->y * otherVector.y);
+}
+
+//element by element division of 2 vectors and returns a new vector
+
+Vector2D Vector2D::operator/(const Vector2D& otherVector) const {
+    return Vector2D(this->x / otherVector.x, this->y / otherVector.y);
+}
+
 // return the dot product
 
 real_t Vector2D::dot(const Vector2D& otherVector) const {
@@ -143,6 +155,10 @@ Vector2D Vector2D::PeriodicDiff(const Vector2D& otherVector, const Vector2D& dom
     else if (diff.y < -domainSize.y/2)
         diff.y = domainSize.y + diff.y;
     return diff;
+}
+
+Vector2D Vector2D::flip() const {
+    return Vector2D(this->y, this->x);
 }
 
 // overload cout to print a vector

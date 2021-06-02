@@ -49,15 +49,30 @@ void LJSimulation::placeAllParticles() {
     {
         grid->placeParticle(&p);
     }
+    this->numberOfParticles = particles.size();
+}
+
+Vector2D LJSimulation::computeHelfandMoment() {
+    Vector2D Gt = -viscosity_correction;
+    std::cout << "correction: " << Gt << '\n';
+    for (auto &p : particles)
+    {
+        Gt += p.getMass() * p.getVelocity() * p.getPosition().flip();
+    }
+    return Gt;
+    
+}
+
+real_t LJSimulation::computeMeanKineticEnergy() {
+    real_t E = 0.;
+    for (auto &p : particles) {
+        E += p.getMass() * p.getVelocity().squaredNorm();
+    }
+    return 0.5 * E/particles.size();
 }
 
 real_t LJSimulation::ComputeTemperature() {
-    real_t E = 0; // kinetic energy
-    for (auto &p : particles)
-    {
-        E += p.computeKineticEnergy();
-    }
-    E /= particles.size(); // Mean of the kineticEnergy
+    auto E = computeMeanKineticEnergy(); // Mean of the kineticEnergy
     /**
      * E = 3/2 Kb T => T = 2 E /(3*Kb)
     */
@@ -66,7 +81,7 @@ real_t LJSimulation::ComputeTemperature() {
 
 real_t LJSimulation::ComputePressure() {
     // PV = nRT => P = nRT/V
-    return particles.size()*R_*ComputeTemperature()/(domainSize.x*domainSize.y);
+    return numberOfParticles * R_ * ComputeTemperature()/(domainSize.x*domainSize.y);
 }
 
 void LJSimulation::computeAccelerations() {
@@ -106,9 +121,9 @@ void LJSimulation::computeAccelerations() {
                             * Fij = dV/dr = 48(-12r^-13 + 6r^-7)
                             */
                             // the force will be: f = 4 * (0.5 * r_inv6 - r_inv6^2) * r_inv;
-                            // in our case, f = a since m = 1
-                            // to compute the vector of the acceleration, we can use the normalize vector distance:
-                            // a = vector_r/r * f = vector_r * 4 * (0.5 * r_inv6 - r_inv6^2) * r_inv^2;
+                            // to compute the force vector, we can use the normalize vector distance:
+                            // vector_f = vector_r/r * f = vector_r * 4 * (0.5 * r_inv6 - r_inv6^2) * r_inv^2;
+                            // example: rx/r = fx/f => fx = rx * f/r
                             // this is why we only need to compute r_inv^2:
                             // f * r_inv is given by:
                             real_t force_r_inv = 48 * eps * (0.5 * r_inv6*simga_6 - r_inv6*r_inv6*simga_6*simga_6) * r_inv2;
@@ -139,9 +154,14 @@ void LJSimulation::computeStep(real_t dt) {
     {
         // update the position
         if (this->boundary == LJBoundary::PERIODIC) { // Periodic boundaries
-            p.setPosition((p.getPosition() + dt * p.getVelocity()) % this->domainSize);
+            const auto newPosition = p.getPosition() + dt * p.getVelocity();
+            p.setPosition(newPosition % this->domainSize);
+            // compute the size of the jump in the x direction
+            // add the jump to the correction term:
+            viscosity_correction += p.getMass() * p.getVelocity() * (p.getPosition() - newPosition).flip();
         } else if (this->boundary == LJBoundary::POISSEUILLE) { // Periodic boundaries
-            const auto px = std::fmod(std::fmod(p.getPosition().x  + dt * p.getVelocity().x, domainSize.x) + domainSize.x, domainSize.x);
+            const auto pxNoMod = p.getPosition().x  + dt * p.getVelocity().x; // new position without the modulus
+            const auto px = std::fmod(std::fmod(pxNoMod, domainSize.x) + domainSize.x, domainSize.x);
             auto py = p.getPosition().y + dt * p.getVelocity().y;
             if (py > domainSize.y) {
                 py = domainSize.y;
@@ -153,6 +173,7 @@ void LJSimulation::computeStep(real_t dt) {
                 p.setVelocity(-p.getVelocity()); 
             }
             p.setPosition({px, py});
+            viscosity_correction += p.getMass() * p.getVelocity() * Vector2D(0., px - pxNoMod);
         }
         // reset the acceleration
         p.setAcceleration(this->constantAcceleration + (this->constantForce / p.getMass()));
@@ -258,6 +279,9 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles) {
     }
     // put the particles inside the Grid:
     placeAllParticles();
+
+    // compute G0:
+    G0 = computeHelfandMoment();
 }
 
 void LJSimulation::placeRandomParticles(unsigned int nbParticles, real_t muX, real_t muY, real_t sigmaX, real_t sigmaY, real_t corr) {
@@ -269,8 +293,30 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles, real_t muX, re
         auto sqrt_nb = std::ceil(std::sqrt(nbParticles));
         real_t px = (i % (int) sqrt_nb + 0.5) * this->domainSize.x/sqrt_nb;
         real_t py = (i / (int) sqrt_nb + 0.5) * this->domainSize.y/sqrt_nb;
-        particles.push_back(Particle(Vector2D(px, py), Vector2D(vx, vy), Vector2D(), this->mass));
+        particles.push_back(Particle(Vector2D(px, py), Vector2D(vx, vy), this->constantAcceleration + (this->constantForce / this->mass), this->mass));
     }
     // put the particles inside the Grid:
     placeAllParticles();
+
+    // compute G0:
+    G0 = computeHelfandMoment();
+}
+
+
+real_t LJSimulation::computeDensity() {
+    real_t rho = 0.;
+    for (auto &p : particles) {
+        rho += p.getMass();
+    }
+    return rho/(domainSize.x * domainSize.y);
+}
+
+real_t LJSimulation::computeDynamicViscosity(real_t t, bool positionDirectionX) {
+    if (t == 0) t = simulationDuration;
+    real_t coef = 3/(4 * computeDensity() * domainSize.x * domainSize.y * computeMeanKineticEnergy() * (particles.size() - 1) * t);
+    auto Gt = computeHelfandMoment();
+    if (positionDirectionX) {
+        return coef * (Gt.y - G0.y)*(Gt.y - G0.y); // Gt.y because Gt.y contains Gyx(t) => x position
+    }
+    return coef * (Gt.x - G0.x)*(Gt.x - G0.x);
 }
