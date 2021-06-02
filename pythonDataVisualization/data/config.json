@@ -2,5 +2,5 @@
 "domainSizeX": 15,
 "domainSizeY": 15,
 "sigma": 0.5,
-"Dt":9.000000,
+"Dt":10.000000,
 }

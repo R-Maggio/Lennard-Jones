@@ -54,7 +54,6 @@ void LJSimulation::placeAllParticles() {
 
 Vector2D LJSimulation::computeHelfandMoment() {
     Vector2D Gt = -viscosity_correction;
-    std::cout << "correction: " << Gt << '\n';
     for (auto &p : particles)
     {
         Gt += p.getMass() * p.getVelocity() * p.getPosition().flip();
@@ -185,7 +184,16 @@ void LJSimulation::computeStep(real_t dt) {
     // update the velocities
     for (auto &p : particles)
     {
-        p.setVelocity(p.getVelocity() + dt * p.getAcceleration());
+        auto newVelocity = p.getVelocity() + dt * p.getAcceleration();
+        // limit the maximum velocity:
+        const auto maxVel = domainSize / dt / 2;
+        newVelocity.x = newVelocity.x > maxVel.x ? maxVel.x : newVelocity.x;
+        newVelocity.y = newVelocity.y > maxVel.y ? maxVel.y : newVelocity.y;
+
+        newVelocity.x = newVelocity.x < -maxVel.x ? -maxVel.x : newVelocity.x;
+        newVelocity.y = newVelocity.y < -maxVel.y ? -maxVel.y : newVelocity.y;
+
+        p.setVelocity(newVelocity);
     }
     // replace the particles. We need to iterate over the cells:
     //! very unefficient !!!
@@ -289,7 +297,13 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles, real_t muX, re
     std::normal_distribution normalDistribution(0.0,1.0);
     for (size_t i = 0; i < nbParticles; i++) {
         real_t vx = muX + sigmaX * normalDistribution(randomGenerator);
-        real_t vy = muY + (sigmaY/sigmaX) * corr * (vx - muX) + std::sqrt((1-corr*corr)*sigmaY*sigmaY) * normalDistribution(randomGenerator);
+        real_t vy;
+        if (sigmaX == 0) {
+            // TODO: check if correct
+            vy = muY + sigmaY * normalDistribution(randomGenerator);
+        } else {
+            vy = (sigmaY/sigmaX) * corr * (vx - muX) + std::sqrt((1-corr*corr)*sigmaY*sigmaY) * normalDistribution(randomGenerator);
+        }
         auto sqrt_nb = std::ceil(std::sqrt(nbParticles));
         real_t px = (i % (int) sqrt_nb + 0.5) * this->domainSize.x/sqrt_nb;
         real_t py = (i / (int) sqrt_nb + 0.5) * this->domainSize.y/sqrt_nb;
