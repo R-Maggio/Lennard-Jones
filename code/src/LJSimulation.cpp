@@ -10,7 +10,7 @@
 #include "Cell.hpp"
 #include "constExpr.hpp"
 
-LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, const Vector2D& domainSize, const Vector2D& gridSize, LJBoundary boundary, const Vector2D& constantForce, const Vector2D& constantAcceleration) {
+LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, const Vector2D& domainSize, const Vector2D& gridSize, LJBoundary boundary, const Vector2D& constantForce, const Vector2D& constantAcceleration, const Vector2D& maxVel, real_t simulationDuration) {
     this->sigma = sigma;
     this->mass = mass;
     this->eps = eps;
@@ -21,6 +21,8 @@ LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, con
     this->boundary = boundary;
     this->constantForce = constantForce;
     this->constantAcceleration = constantAcceleration;
+    this->maxVel = maxVel;
+    this->simulationDuration = simulationDuration; // optional, can be 0
     // TODO: pass particle list
     // reduced units:
     /**
@@ -40,8 +42,8 @@ LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, con
     placeAllParticles(); //! might be called in another place
 }
 
-LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary, const Vector2D& constantForce, const Vector2D& constantAcceleration):
-    LJSimulation(sigma, mass, eps, dc, Vector2D(domainSize, domainSize), Vector2D(gridSize, gridSize), boundary, constantForce, constantAcceleration) { // call the other constructor
+LJSimulation::LJSimulation(real_t sigma, real_t mass, real_t eps, real_t dc, real_t domainSize, unsigned int gridSize, LJBoundary boundary, const Vector2D& constantForce, const Vector2D& constantAcceleration, const Vector2D& maxVel, real_t simulationDuration):
+    LJSimulation(sigma, mass, eps, dc, Vector2D(domainSize, domainSize), Vector2D(gridSize, gridSize), boundary, constantForce, constantAcceleration, maxVel, simulationDuration) { // call the other constructor
 }
 
 void LJSimulation::placeAllParticles() {
@@ -182,11 +184,8 @@ void LJSimulation::computeStep(real_t dt) {
     computeAccelerations();
 
     // update the velocities
-    for (auto &p : particles)
-    {
+    for (auto &p : particles) {
         auto newVelocity = p.getVelocity() + dt * p.getAcceleration();
-        // limit the maximum velocity:
-        const auto maxVel = domainSize / dt / 2;
         newVelocity.x = newVelocity.x > maxVel.x ? maxVel.x : newVelocity.x;
         newVelocity.y = newVelocity.y > maxVel.y ? maxVel.y : newVelocity.y;
 
@@ -293,6 +292,19 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles) {
 }
 
 void LJSimulation::placeRandomParticles(unsigned int nbParticles, real_t muX, real_t muY, real_t sigmaX, real_t sigmaY, real_t corr) {
+    // Print warning if velocity will be to big:
+    if (simulationDuration > 0.) {
+        // warning if 2 sigma +- mu > 0.01 * Dx/Dt
+        auto AbsVelX = std::abs(muX) + 2*sigmaX;
+        auto AbsVelY = std::abs(muY) + 2*sigmaY;
+        if (0.01 * domainSize.x/simulationDuration < AbsVelX) {
+            std::cerr << "\033[31m" << "Warning: particles velocity along X axis is too big" << "\033[0m" << "\n";
+        }
+        if (0.01 * domainSize.y/simulationDuration < AbsVelY) {
+            std::cerr << "\033[31m" << "Warning: particles velocity along Y axis is too big" << "\033[0m" << "\n";
+        }
+    }
+
     std::default_random_engine randomGenerator;
     std::normal_distribution normalDistribution(0.0,1.0);
     for (size_t i = 0; i < nbParticles; i++) {
@@ -305,9 +317,9 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles, real_t muX, re
             vy = (sigmaY/sigmaX) * corr * (vx - muX) + std::sqrt((1-corr*corr)*sigmaY*sigmaY) * normalDistribution(randomGenerator);
         }
         auto sqrt_nb = std::ceil(std::sqrt(nbParticles));
-        real_t px = (i % (int) sqrt_nb + 0.5) * this->domainSize.x/sqrt_nb;
+        real_t px = ((i % (int) sqrt_nb + 0.5 + 0.5 * ((i/(int) sqrt_nb)%2)) * this->domainSize.x/sqrt_nb);
         real_t py = (i / (int) sqrt_nb + 0.5) * this->domainSize.y/sqrt_nb;
-        particles.push_back(Particle(Vector2D(px, py), Vector2D(vx, vy), this->constantAcceleration + (this->constantForce / this->mass), this->mass));
+        particles.push_back(Particle(Vector2D(px, py)%this->domainSize.x, Vector2D(vx, vy), this->constantAcceleration + (this->constantForce / this->mass), this->mass));
     }
     // put the particles inside the Grid:
     placeAllParticles();

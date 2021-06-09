@@ -43,6 +43,13 @@ data_velocity = np.array(data_velocity)
 
 print(count, " files imported.")
 
+fig1 = plt.figure()
+fig1.set_size_inches((15, 15))
+plt.plot(data_position[0, 0], data_position[0, 1], 'ro')
+plt.xlim(0, config['domainSizeX'])
+plt.ylim(0, config['domainSizeY'])
+plt.title('Initial Position')
+
 fig = plt.figure()
 fig.set_size_inches((15, 15))
 line, = plt.plot([], [], 'ro')
@@ -58,14 +65,16 @@ def init():
 def animate(i):
     global data_position
     line.set_data(data_position[i, 0], data_position[i, 1])
+    if i == 0:
+        fig1 = fig
     # print(compute_mean_kinetic_energy(data_velocity[i, 0], data_velocity[i, 1], data_mass[i]))
     return line,
 
 ani = FuncAnimation(fig, animate, init_func=init, frames=count, blit=True, interval=15, repeat=False)
 # save the animation:
-writer = PillowWriter(fps=25)  
-ani.save(dirname + "/animation.gif", writer=writer)  
-ani.save()
+# writer = PillowWriter(fps=25)  
+# ani.save(dirname + "/animation.gif", writer=writer)  
+# ani.save()
 
 # show
 # plt.show()
@@ -106,17 +115,23 @@ Pi_yy = Pi_list[:, 1, 1]
 X_range = range(Pi_xx.size)
 
 # plot PI ..........................................
-plt.figure()
+fig2 = plt.figure()
 plt.plot(X_range, Pi_xx, label=r"$\Pi_{xx}$")
 plt.plot(X_range, Pi_xy, label=r"$\Pi_{xy}$")
 plt.plot(X_range, Pi_yy, label=r"$\Pi_{yy}$")
+plt.xlabel(r"$iteration$")
+plt.ylabel(r"$\Pi$")
+plt.title('Pi')
 
 plt.legend()
 
 # plot Pi_neq
-plt.figure()
+fig3 = plt.figure()
 # plt.plot(X_range, Pi_neq_list[:, 0, 0], label=r"$\Pi_{xx}^{neq}$")
 plt.plot(X_range, Pi_neq_list[:, 0, 1], label=r"$\Pi_{xy}^{neq}$")
+plt.xlabel(r"$iteration$")
+plt.ylabel(r"$\Pi_{xy}^{neq}$")
+plt.title(r'$\Pi_{xy}^{neq}$')
 # plt.plot(X_range, Pi_neq_list[:, 1, 1], label=r"$\Pi_{yy}^{neq}$")
 
 plt.legend()
@@ -130,6 +145,7 @@ fin = compute_fi_moments(rho, jin, 500*Pi_in, V, W, v, Dt, tau)
 fout_LJ = compute_fi_moments(rho, jout, Pi_out, V, W, v, Dt, tau)
 fout_LB = compute_fout_LB(fin, tau, feq)
 
+
 print("\nfeq:\n",feq)
 print("\nfin:\n",fin)
 print("\nfout_LJ:\n", fout_LJ)
@@ -142,3 +158,15 @@ print("Pi_neq_out", Pi_neq_list[-1, 0, 1])
 # show ..........................................
 if True:
     plt.show()
+
+# save images:
+# show
+plt.show()
+
+#  save images:
+if True:
+    img_save_path = "../../.backup_data/images"
+    images_names = ["initial_position", "Pi", "Pi_neq"]
+    figures = [fig1, fig2, fig3]
+    for i in range(len(figures)):
+        figures[i].savefig(img_save_path+'/'+images_names[i]+".png", bbox_inches='tight', pad_inches=0.05, dpi=200)

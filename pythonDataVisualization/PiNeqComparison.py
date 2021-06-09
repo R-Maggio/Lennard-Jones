@@ -70,47 +70,65 @@ visc_list = np.array(visc_list)
 
 Pi_neq_in_list = [] # non equilibrium part of Pi
 Pi_neq_out_list = []
+tau_list = []
 
 for i in range(data_velocity_in.shape[0]):
+    tau_list.append(compute_tau(visc_list[i], Dt, v))
     Pi_in = compute_Pi(data_config[i]['domainSizeX'], data_config[i]['domainSizeY'], data_velocity_in[i][0], data_velocity_in[i][1])
     Pi_out = compute_Pi(data_config[i]['domainSizeX'], data_config[i]['domainSizeY'], data_velocity_out[i][0], data_velocity_out[i][1])
     Pi_neq_in_list.append(Pi_in - compute_Pi_eq(rho, v, np.mean(data_velocity_in[i], axis=1)))
     Pi_neq_out_list.append(Pi_out - compute_Pi_eq(rho, v, np.mean(data_velocity_out[i], axis=1)))
 Pi_neq_in_list = np.array(Pi_neq_in_list)
 Pi_neq_out_list = np.array(Pi_neq_out_list)
+tau_list = np.array(tau_list)
 
 Pi_neq_in_xy = Pi_neq_in_list[:, 0, 1]
 Pi_neq_out_xy = Pi_neq_out_list[:, 0, 1]
 
 # plot PI ..........................................
-plt.figure()
+fig1 = plt.figure()
 plt.plot(Pi_neq_in_xy, Pi_neq_out_xy, label=r"$\Pi_{xy}^{neq, out}$")
 plt.xlabel(r"$\Pi_{xy}^{neq, in}$")
 plt.ylabel(r"$\Pi_{xy}^{neq, out}$")
 plt.title(r"$\Pi_{xy}^{neq, out}$")
 
-# on a smaller interval:
-plt.figure()
-plt.plot(Pi_neq_in_xy[34:50], Pi_neq_out_xy[34:50], label=r"$\Pi_{xy}^{neq, out}$")
+# plot tau:
+fig2 = plt.figure()
+plt.plot(Pi_neq_in_xy, Pi_neq_out_xy/Pi_neq_in_xy, label=r"$\Pi_{xy}^{neq, out}/\Pi_{xy}^{neq, in}$")
 plt.xlabel(r"$\Pi_{xy}^{neq, in}$")
-plt.ylabel(r"$\Pi_{xy}^{neq, out}$")
-plt.title(r"$\Pi_{xy}^{neq, out}$")
+plt.ylabel(r"$\Pi_{xy}^{neq, out}/\Pi_{xy}^{neq, in}$")
+plt.title(r"$(1 - \frac{1}{\tau})$")
+
+# on a smaller interval:
+# plt.figure()
+# plt.plot(Pi_neq_in_xy[34:50], Pi_neq_out_xy[34:50], label=r"$\Pi_{xy}^{neq, out}$")
+# plt.xlabel(r"$\Pi_{xy}^{neq, in}$")
+# plt.ylabel(r"$\Pi_{xy}^{neq, out}$")
+# plt.title(r"$\Pi_{xy}^{neq, out}$")
 
 # remove "outsider:"
-filtered_pi_out = []
-filtered_pi_in = []
+# filtered_pi_out = []
+# filtered_pi_in = []
 
-for i in range(Pi_neq_in_xy.shape[0]):
-    if np.abs(Pi_neq_out_xy[i]) < 0.1:
-        filtered_pi_out.append(Pi_neq_out_xy[i])
-        filtered_pi_in.append(Pi_neq_in_xy[i])
-    else:
-        print(corr_list[i])
+# for i in range(Pi_neq_in_xy.shape[0]):
+#     if np.abs(Pi_neq_out_xy[i]) < 0.025:
+#         filtered_pi_out.append(Pi_neq_out_xy[i])
+#         filtered_pi_in.append(Pi_neq_in_xy[i])
+#     else:
+#         print(corr_list[i])
 
-plt.figure()
-plt.plot(filtered_pi_in, filtered_pi_out, label=r"$\Pi_{xy}^{neq, out}$")
-plt.xlabel(r"$\Pi_{xy}^{neq, in}$")
-plt.ylabel(r"$\Pi_{xy}^{neq, out}$")
-plt.title(r"$\Pi_{xy}^{neq, out}$ without outsiders")
+# plt.figure()
+# plt.plot(filtered_pi_in, filtered_pi_out, label=r"$\Pi_{xy}^{neq, out}$")
+# plt.xlabel(r"$\Pi_{xy}^{neq, in}$")
+# plt.ylabel(r"$\Pi_{xy}^{neq, out}$")
+# plt.title(r"$\Pi_{xy}^{neq, out}$ without outsiders")
 
 plt.show()
+
+
+if True:
+    img_save_path = "../../.backup_data/images"
+    images_names = ["Pi_comp", "tau"]
+    figures = [fig1, fig2]
+    for i in range(len(figures)):
+        figures[i].savefig(img_save_path+'/'+images_names[i]+".png", bbox_inches='tight', pad_inches=0.05, dpi=200)

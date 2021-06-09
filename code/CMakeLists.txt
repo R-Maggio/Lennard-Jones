@@ -1,5 +1,5 @@
 # cmake version
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.9)
 
 # project name
 project(lennard_jones VERSION 0.1.0)
@@ -11,6 +11,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # set(CMAKE_CXX_FLAGS "-O3 -Werror -Wall -Wextra -Wpedantic")
 # set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS "-O3 -Wall")
+set(OpenMP_CXX_FLAGS "-fopenmp -lpthread")
+
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
 
 # include(CTest)
 enable_testing()

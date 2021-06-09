@@ -2,5 +2,5 @@
 "domainSizeX": 15,
 "domainSizeY": 15,
 "sigma": 0.5,
-"Dt":10.000000,
+"Dt":1.000000,"correlation":0.500000,"visc":0.001004,
 }
