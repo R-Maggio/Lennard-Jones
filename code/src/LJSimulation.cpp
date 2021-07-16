@@ -75,9 +75,9 @@ real_t LJSimulation::computeMeanKineticEnergy() {
 real_t LJSimulation::ComputeTemperature() {
     auto E = computeMeanKineticEnergy(); // Mean of the kineticEnergy
     /**
-     * E = 3/2 Kb T => T = 2 E /(3*Kb)
+     * E = Kb T in 2D
     */
-    return 2*E/(3*Kb);
+    return E/Kb;
 }
 
 real_t LJSimulation::ComputePressure() {
@@ -171,7 +171,7 @@ void LJSimulation::computeStep(real_t dt) {
             } else if (py < 0.) {
                 py = 0.;
                 // reverse velocity:
-                p.setVelocity(-p.getVelocity()); 
+                p.setVelocity(-p.getVelocity());
             }
             p.setPosition({px, py});
             viscosity_correction += p.getMass() * p.getVelocity() * Vector2D(0., px - pxNoMod);
@@ -229,6 +229,7 @@ void LJSimulation::exportParticlesCSV(std::string path) {
         file << "m,px,py,vx,vy,ax,ay\n";
         for (auto &p : particles)
         {
+            // std::cout << p.getVelocity().x << '\n';
             file << p.getMass() << ','
                  << p.getPosition().x << ',' << p.getPosition().y << ','
                  << p.getVelocity().x << ',' << p.getVelocity().y << ','
@@ -306,7 +307,7 @@ void LJSimulation::placeRandomParticles(unsigned int nbParticles, real_t muX, re
     }
 
     std::default_random_engine randomGenerator;
-    std::normal_distribution normalDistribution(0.0,1.0);
+    std::normal_distribution<real_t> normalDistribution(0.0,1.0);
     for (size_t i = 0; i < nbParticles; i++) {
         real_t vx = muX + sigmaX * normalDistribution(randomGenerator);
         real_t vy;

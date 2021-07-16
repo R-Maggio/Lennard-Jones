@@ -74,8 +74,8 @@ tau_list = []
 
 for i in range(data_velocity_in.shape[0]):
     tau_list.append(compute_tau(visc_list[i], Dt, v))
-    Pi_in = compute_Pi(data_config[i]['domainSizeX'], data_config[i]['domainSizeY'], data_velocity_in[i][0], data_velocity_in[i][1])
-    Pi_out = compute_Pi(data_config[i]['domainSizeX'], data_config[i]['domainSizeY'], data_velocity_out[i][0], data_velocity_out[i][1])
+    Pi_in = compute_Pi(data_config[i]['domainSizeX'], data_config[i]['domainSizeY'], data_velocity_in[i][0], data_velocity_in[i][1], data_mass[i])
+    Pi_out = compute_Pi(data_config[i]['domainSizeX'], data_config[i]['domainSizeY'], data_velocity_out[i][0], data_velocity_out[i][1], data_mass[i])
     Pi_neq_in_list.append(Pi_in - compute_Pi_eq(rho, v, np.mean(data_velocity_in[i], axis=1)))
     Pi_neq_out_list.append(Pi_out - compute_Pi_eq(rho, v, np.mean(data_velocity_out[i], axis=1)))
 Pi_neq_in_list = np.array(Pi_neq_in_list)
@@ -86,18 +86,30 @@ Pi_neq_in_xy = Pi_neq_in_list[:, 0, 1]
 Pi_neq_out_xy = Pi_neq_out_list[:, 0, 1]
 
 # plot PI ..........................................
+
+# linear regression:
+
+b = (Pi_neq_out_xy).reshape(-1, 1)
+A = (Pi_neq_in_xy).reshape(-1, 1)
+x = ((A.T @ b)/(A.T @ A)).reshape(-1)
+tau_ = 1/(1-x)
+
 fig1 = plt.figure()
 plt.plot(Pi_neq_in_xy, Pi_neq_out_xy, label=r"$\Pi_{xy}^{neq, out}$")
+plt.plot(Pi_neq_in_xy, x*Pi_neq_in_xy, label=r"$\tau = $" + str(tau_))
 plt.xlabel(r"$\Pi_{xy}^{neq, in}$")
 plt.ylabel(r"$\Pi_{xy}^{neq, out}$")
 plt.title(r"$\Pi_{xy}^{neq, out}$")
+plt.legend()
 
 # plot tau:
 fig2 = plt.figure()
+
 plt.plot(Pi_neq_in_xy, Pi_neq_out_xy/Pi_neq_in_xy, label=r"$\Pi_{xy}^{neq, out}/\Pi_{xy}^{neq, in}$")
 plt.xlabel(r"$\Pi_{xy}^{neq, in}$")
 plt.ylabel(r"$\Pi_{xy}^{neq, out}/\Pi_{xy}^{neq, in}$")
 plt.title(r"$(1 - \frac{1}{\tau})$")
+plt.legend()
 
 # on a smaller interval:
 # plt.figure()
@@ -128,7 +140,7 @@ plt.show()
 
 if True:
     img_save_path = "../../.backup_data/images"
-    images_names = ["Pi_comp", "tau"]
+    images_names = ["Pi_comp" + "2000", "tau" + "2000"]
     figures = [fig1, fig2]
     for i in range(len(figures)):
         figures[i].savefig(img_save_path+'/'+images_names[i]+".png", bbox_inches='tight', pad_inches=0.05, dpi=200)

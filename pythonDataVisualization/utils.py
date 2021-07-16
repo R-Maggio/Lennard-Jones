@@ -6,7 +6,7 @@ def compute_strain_moments(rho, j, Pi, Dt, v, tau):
     kronecker = lambda a, b: 1 if a == b else 0
     for a in range(S.shape[0]):
         for b in range(S.shape[1]):
-            S[a, b] = (Pi[a, b] - rho * 1/3 * v**2 * kronecker(a, b) + 1/rho * j[a] * j[b]) / (-2/3 * Dt * tau * v**2 * rho)
+            S[a, b] = (Pi[a, b] - rho * 1/3 * v**2 * kronecker(a, b) - 1/rho * j[a] * j[b]) / (-2/3 * Dt * tau * v**2 * rho)
     return S
 
 def compute_Qi(Vi, v):
@@ -18,6 +18,8 @@ def compute_Qi(Vi, v):
     return Q
 
 def compute_feq(rho, j, Pi, V, W, v, tau):
+    #! test:
+    v = (3/2) * compute_v_from_Pi(rho, Pi)
     f = np.zeros(V.shape[0])
     kronecker = lambda a, b: 1 if a == b else 0
     for i in range(f.size):
@@ -34,8 +36,25 @@ def compute_fneq(rho, j, Pi, V, W, v, Dt, tau):
         f[i] = - 3 * Dt * tau * W[i]/(v**2) * rho * np.einsum('ij, ij', Qi, S)
     return f
 
-def compute_fi_moments(rho, j, Pi, V, W, v, Dt, tau):
-    return compute_feq(rho, j, Pi, V, W, v, tau) + compute_fneq(rho, j, Pi, V, W, v, Dt, tau)
+def compute_fneq2(rho, j, Pi, V, W, v):
+    f = np.zeros(V.shape[0])
+    kronecker = lambda a, b: 1 if a == b else 0
+    temp = np.zeros((2, 2))
+    kronecker = lambda a, b: 1 if a == b else 0
+    for a in range(temp.shape[0]):
+        for b in range(temp.shape[1]):
+            temp[a, b] = (Pi[a, b] - rho * 1/3 * v**2 * kronecker(a, b) - 1/rho * j[a] * j[b])
+    for i in range(f.size):
+        Qi = compute_Qi(V[i], v)
+        f[i] = 9/2 * W[i]/(v**4) * np.einsum('ij, ij', Qi, temp)
+    return f
+
+def compute_fi_moments(rho, j, Pi, Ei, W, v, Dt, tau):
+    #! test:
+    v = (3/2) * compute_v_from_Pi(rho, Pi)
+    V = v*Ei
+    # print(v)
+    return compute_feq(rho, j, Pi, V, W, v, tau) + compute_fneq2(rho, j, Pi, V, W, v)
 
 def compute_fout_LB(fin, tau, feq):
     return fin + 1/tau * (feq - fin)
@@ -59,6 +78,20 @@ def compute_kinematic_visc_auto_corr(domainSizeX, domainSizeY, Px1, Py1, Vx1, Vy
 def compute_rho(Mass_list, domainSizeX, domainSizeY):
     return np.sum(Mass_list) / (domainSizeX * domainSizeY)
 
+def compute_rho_fi(f):
+    return np.sum(f)
+
+def compute_j_fi(f, V):
+    return np.sum(f[:,None] * V, axis=0)
+
+def compute_Pi_fi(f, V):
+    Pi = np.zeros((2, 2))
+    for a in range(Pi.shape[0]):
+        for b in range(Pi.shape[1]):
+            for i in range(f.shape[0]):
+                Pi[a, b] += f[i] * V[i, a] * V[i, b]
+    return Pi
+
 # def compute_Pi(j, u):
 #     Pi = np.zeros((2, 2))
 #     for a in range(Pi.shape[0]):
@@ -66,13 +99,13 @@ def compute_rho(Mass_list, domainSizeX, domainSizeY):
 #             Pi[a, b] = j[a]*u[b]
 #     return Pi
 
-def compute_Pi(domainSizeX, domainSizeY, Ux, Uy):
+def compute_Pi(domainSizeX, domainSizeY, Ux, Uy, m_list):
     U = np.array([Ux, Uy])
     Pi = np.zeros((2, 2))
     for a in range(Pi.shape[0]):
         for b in range(Pi.shape[1]):
             for i in range(Ux.shape[0]):
-                Pi[a, b] += U[a, i]*U[b, i]
+                Pi[a, b] += U[a, i]*U[b, i]*m_list[i]
     return Pi / (domainSizeX * domainSizeY)
 
 def compute_Pi_eq(rho, v, u):
@@ -82,3 +115,9 @@ def compute_Pi_eq(rho, v, u):
         for b in range(Pi_eq.shape[1]):
             Pi_eq[a, b] = rho * 1/3 * v**2 * kronecker(a, b) + rho * u[a] * u[b]
     return Pi_eq
+
+def compute_covariance(rho, j, Pi):
+    return Pi/rho - (j.reshape(-1, 1) @ j.reshape(1, -1))/(rho**2)
+
+def compute_v_from_Pi(rho, Pi):
+    return (Pi[0, 0] + Pi[1, 1]) / rho
